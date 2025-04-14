@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "bootstrap/dist/css/bootstrap.min.css";
+import WeightCal from "../components/WeightCal";
 import { FaBars, FaTimes, FaChevronDown, FaChevronUp, FaSearch } from "react-icons/fa";
-import ConversionCalculator from "../components/ConversionCalculator"; // Import the new ConversionCalculator component
+import ConversionCalculator from "../components/WeightCal"; // Import the new ConversionCalculator component
 import PDFFrame from "../components/pdfFrame"; // Importing the updated PDFFrame component
-import Quiz from "../components/Quiz"; // Importing the Quiz component??
+import Quiz from "../components/Quiz"; // Importing the Quiz component
 import "./landingPage.css";
+import TemperatureConverter from "../components/TemperatureConverter";
 import "./landingPageResponsive.css"; // Importing the new responsive styles
 import "./navbarStyles.css"; // Importing the new navbar styles
 
@@ -39,16 +41,10 @@ const menuItems = [
     ],
   },
   { name: "Quiz" },
-  {
-    name: "Conversion Calculator",
-    hasChildren: true,
-    children: [
-      { name: "Weight", },
-      { name: "Temperature", },
-      { name: "Length", },
-    ]
-  },
-  { name: "Dynamic Simulation" },
+  { name: "Weight Converter" },
+  { name: "Temperature Converter" },
+  { name: "Dynamic Simulation"}
+  
 ];
 
 export default function LandingPage() {
@@ -85,9 +81,21 @@ export default function LandingPage() {
       setSelectedPdf(null); // Clear any selected PDF
       setShowHome(false); // Hide home content
       setIsOpen(false); // Close sidebar
+    } else if (item.name === "Weight Converter") { // Check for the "Weight" child item
+      console.log("Weight item clicked"); // Log to confirm the click
+      setSelectedComponent(<WeightCal />); // Render the ConversionCalculator component
+      setSelectedPdf(null);
+      setShowHome(false);
+      setIsOpen(false);
+    } else if (item.name === "Temperature Converter") { // Check for the "Temperature Converter" child item
+      console.log("Temperature Converter item clicked"); // Log to confirm the click
+      setSelectedComponent(<TemperatureConverter />); // Render the TemperatureConverter component
+      setSelectedPdf(null);
+      setShowHome(false);
+      setIsOpen(false);
     } else if (item.name === "Conversion Calculator") {
-console.log("Conversion Calculator selected"); // Log to confirm selection
-setSelectedComponent(<ConversionCalculator />); // Render the ConversionCalculator component
+      // Existing logic for Conversion Calculator
+      setSelectedComponent(<ConversionCalculator />); // Render the ConversionCalculator component
       setSelectedPdf(null);
       setShowHome(false);
       setIsOpen(false);

@@ -1,0 +1,152 @@
+/* Minimalist ConversionCalculator.css */
+:root {
+    --primary-color: #3498db;
+    --accent-color: #e74c3c;
+    --background-color: #f8f9fa;
+    --card-color: #ffffff;
+    --text-color: #333333;
+    --border-color: #eaeaea;
+    --shadow-color: rgba(0, 0, 0, 0.06);
+    --transition: 0.2s ease;
+  }
+  
+  body {
+    background-color: var(--background-color);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+  }
+  
+  .calculator-container {
+    width: 90%;
+    max-width: 500px;
+    margin: 1.5rem;
+    padding: 2rem;
+    background: var(--card-color);
+    border-radius: 12px;
+    box-shadow: 0 8px 16px var(--shadow-color);
+    border: 1px solid var(--border-color);
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+  
+  .calculator-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px var(--shadow-color);
+  }
+  
+  .calculator-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+  }
+  
+  .field-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .field-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color);
+  }
+  
+  .input-container {
+    position: relative;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  
+  .input-container:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 0.875rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    border: none;
+    background: transparent;
+    color: var(--text-color);
+    transition: background-color var(--transition);
+    border-radius: 6px;
+  }
+  
+  .input-field:focus {
+    outline: none;
+  }
+  
+  /* Remove spinner buttons from number inputs across browsers */
+  /* For Webkit browsers like Chrome, Safari */
+  .input-field::-webkit-outer-spin-button,
+  .input-field::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  /* For Firefox */
+  .input-field[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  
+  .unit-label {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color);
+    opacity: 0.7;
+  }
+  
+  .input-field[readonly] {
+    background: var(--background-color);
+    color: var(--text-color);
+    opacity: 0.8;
+  }
+  
+  .closebtn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--text-dark);
+    opacity: 0.7;
+    transition: opacity var(--transition) ease;
+  }
+  
+  .closebtn:hover {
+    opacity: 1;
+  }
+  
+  @media (max-width: 480px) {
+    .calculator-container {
+      padding: 1.25rem;
+      margin: 1rem;
+    }
+    
+    .calculator-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .input-field {
+      font-size: 1.1rem;
+      padding: 0.75rem;
+    }
+  }

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "bootstrap/dist/css/bootstrap.min.css";
 import WeightCal from "../components/WeightCal";
-import { FaBars, FaTimes, FaChevronDown, FaChevronUp, FaSearch } from "react-icons/fa";
+import { FaBars, FaChevronDown, FaChevronUp, FaSearch } from "react-icons/fa";
 import ConversionCalculator from "../components/WeightCal"; // Import the new ConversionCalculator component
 import PDFFrame from "../components/pdfFrame"; // Importing the updated PDFFrame component
 import Quiz from "../components/Quiz"; // Importing the Quiz component
@@ -44,7 +44,6 @@ const menuItems = [
   { name: "Weight Converter" },
   { name: "Temperature Converter" },
   { name: "Dynamic Simulation"}
-  
 ];
 
 export default function LandingPage() {
@@ -146,7 +145,7 @@ export default function LandingPage() {
           </button> */}
         </div>
         <ul>
-          {menuItems.map((item, index) => (
+          {menuItems.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase())).map((item, index) => (
             <li key={index}>
               <div className="menu-item" onClick={() => {
                 item.hasChildren ? toggleModule(index) : handleMenuItemClick(item);
@@ -158,7 +157,6 @@ export default function LandingPage() {
                   </span>
                 )}
               </div>
-
               {item.hasChildren && expandedModule === index && (
                 <motion.ul
                   className="nested-menu"

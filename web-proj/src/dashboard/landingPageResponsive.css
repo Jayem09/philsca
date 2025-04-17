@@ -1,11 +1,10 @@
-/* Responsive styles for landing page */
 @media (max-width: 768px) {
   .sidebar {
-    width: 200px; /* Adjust sidebar width for smaller screens */
+    width: 200px;
   }
 
   .pdf-viewer {
-    width: 100%; /* Adjust PDF viewer width for smaller screens */
-    height: 100%; /* Adjust PDF viewer height for smaller screens */
+    width: 100%;
+    height: 100%;
   }
 }

@@ -2,20 +2,19 @@ import React, { useState, useEffect } from 'react';
 import './WeightCal.css';
 
 const ConversionCalculator = () => {
-  const [isOpen, setIsOpen] = useState(true); // State to manage visibility
+  const [isOpen, setIsOpen] = useState(true);
   const [amount, setAmount] = useState('1');
   const [result, setResult] = useState('1000');
 
   const closebtn = () => {
-    console.log("Close button clicked"); // Log when the close button is clicked
-    setIsOpen(false); // Close the calculator
+    console.log("Close button clicked");
+    setIsOpen(false);
   };
 
   const handleAmountChange = (e) => {
     const value = e.target.value;
     setAmount(value);
 
-    // Calculate result
     if (value === '' || isNaN(value)) {
       setResult('');
     } else {
@@ -26,13 +25,16 @@ const ConversionCalculator = () => {
     }
   };
 
-  // Focus the first input when component mounts
   useEffect(() => {
     const firstInput = document.querySelector('.input-field');
     if (firstInput) {
       firstInput.focus();
     }
   }, []);
+
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <div className="calculator-container">

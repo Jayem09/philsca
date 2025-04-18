@@ -42,8 +42,7 @@ const menuItems = [
   },
   { name: "Quiz" },
   { name: "Weight Converter" },
-  { name: "Temperature Converter" },
-  { name: "Dynamic Simulation"}
+  { name: "Temperature Converter" }
 ];
 
 export default function LandingPage() {
@@ -96,14 +95,14 @@ export default function LandingPage() {
       setSelectedPdf(null);
       setShowHome(false);
       setIsOpen(false);
-    } else if (item.name === "Dynamic Simulation") {
-      setSelectedComponent(<div className="dynamic-simulation">
-        <h2>Dynamic Simulation</h2>
-        <p>Dynamic simulation coming soon...</p>
-      </div>);
-      setSelectedPdf(null);
-      setShowHome(false);
-      setIsOpen(false);
+    // } else if (item.name === "Dynamic Simulation") {
+    //   setSelectedComponent(<div className="dynamic-simulation">
+    //     <h2>Dynamic Simulation</h2>
+    //     <p>Dynamic simulation coming soon...</p>
+    //   </div>);
+    //   setSelectedPdf(null);
+    //   setShowHome(false);
+    //   setIsOpen(false);
     } else {
       setSelectedComponent(null);
       setShowHome(false);

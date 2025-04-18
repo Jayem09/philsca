@@ -49,8 +49,6 @@ export default function TemperatureConverter() {
 
   const handleClose = () => {
     console.log("Close button clicked");
-    // Add any close functionality here if needed
-  };
 
   return (
     <div className="calculator-container">
@@ -109,4 +107,5 @@ export default function TemperatureConverter() {
       </div>
     </div>
   );
+}
 }

@@ -1,0 +1,136 @@
+.quiz-review-container {
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 1rem auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  max-height: 80vh;
+  position: relative;
+  z-index: 10;
+  }
+  
+  .close-button {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+  font-weight: bold;
+  z-index: 20;
+  position: relative;
+  }
+  
+  h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #111827;
+  }
+  
+  .review-question {
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .question {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #374151;
+  }
+  
+  .user-answer {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  }
+  
+  .correct-answer {
+  color: #16a34a;
+  font-weight: 600;
+  }
+  
+  .incorrect-answer {
+  color: #dc2626;
+  font-weight: 600;
+  }
+  
+  
+  blackbox wants to edit this file:
+  
+  blackbox has a question:
+  You denied the file write operation for the QuizReview.css update. Would you like me to try smaller incremental edits to the CSS file, or provide the CSS content for manual application?
+  
+  
+  oh shot apply the css broo mb
+  
+  blackbox wants to edit this file:
+  
+  
+  Task Completed
+  I have provided the CSS content needed to fix the container overflow issue in the QuizReview component. Since the file write operation failed repeatedly, please manually update the file philsca/web-proj/src/components/QuizReview.css with the following CSS content:
+  
+  .quiz-review-container {
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 1rem auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  max-height: 80vh;
+  position: relative;
+  z-index: 10;
+  }
+  
+  .close-button {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+  font-weight: bold;
+  z-index: 20;
+  position: relative;
+  }
+  
+  h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #111827;
+  }
+  
+  .review-question {
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .question {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #374151;
+  }
+  
+  .user-answer {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  }
+  
+  .correct-answer {
+  color: #16a34a;
+  font-weight: 600;
+  }
+  
+  .incorrect-answer {
+  color: #dc2626;
+  font-weight: 600;
+  }
+  
+  

@@ -17,26 +17,25 @@ const menuItems = [
     name: "Module 1",
     hasChildren: true,
     children: [
-      { name: "Topic 1", pdf: "/pdf/topic1.pdf" },
-      { name: "Topic 2", pdf: "/pdf/topic2.pdf" },
-      { name: "Topic 3", pdf: "/pdf/topic3.pdf" },
+      { name: "Topic 1", pdf: "/pdf/Module 1 (Topic 1).pdf" },
+      { name: "Topic 2", pdf: "/pdf/Module 1 (Topic 2).pdf" },
     ],
   },
   {
     name: "Module 2",
     hasChildren: true,
     children: [
-      { name: "Topic 1", pdf: "/pdf/topic1.pdf" },
-      { name: "Topic 2", pdf: "/pdf/topic2.pdf" },
-      { name: "Topic 3", pdf: "/pdf/topic3.pdf" },
+      { name: "Topic 1", pdf: "/pdf/Module 2 (Topic 1).pdf" },
+      { name: "Topic 2", pdf: "/pdf/Module 2 (Topic 2).pdf" },
+ 
     ],
   },
   {
     name: "Module 3",
     hasChildren: true,
     children: [
-      { name: "Topic 1", pdf: "/pdf/topic1.pdf" },
-      { name: "Topic 2", pdf: "/pdf/topic2.pdf" },
+      { name: "Topic 1", pdf: "/pdf/Module 3 (Topic 1).pdf" },
+      { name: "Topic 2", pdf: "/pdf/Module 3 (Topic 2).pdf" },
       { name: "Topic 3", pdf: "/pdf/topic3.pdf" },
     ],
   },

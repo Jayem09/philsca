@@ -1,6 +1,11 @@
 import { useState } from 'react';
 
-export default function TemperatureConverter() {
+// Utility conversion functions
+const celsiusToFahrenheit = (c) => (c * 9/5) + 32;
+const fahrenheitToCelsius = (f) => (f - 32) * 5/9;
+const celsiusToKelvin = (c) => c + 273.15;
+
+export default function TemperatureConverter({ onClose }) {
   const [celsius, setCelsius] = useState('');
   const [fahrenheit, setFahrenheit] = useState('');
   const [kelvin, setKelvin] = useState('');
@@ -14,8 +19,8 @@ export default function TemperatureConverter() {
       setKelvin('');
     } else {
       const celsiusNum = parseFloat(value);
-      setFahrenheit(((celsiusNum * 9/5) + 32).toFixed(1));
-      setKelvin((celsiusNum + 273.15).toFixed(1));
+      setFahrenheit(celsiusToFahrenheit(celsiusNum).toFixed(1));
+      setKelvin(celsiusToKelvin(celsiusNum).toFixed(1));
     }
   };
 
@@ -28,8 +33,9 @@ export default function TemperatureConverter() {
       setKelvin('');
     } else {
       const fahrenheitNum = parseFloat(value);
-      setCelsius(((fahrenheitNum - 32) * 5/9).toFixed(1));
-      setKelvin(((fahrenheitNum - 32) * 5/9 + 273.15).toFixed(1));
+      const celsiusVal = fahrenheitToCelsius(fahrenheitNum);
+      setCelsius(celsiusVal.toFixed(1));
+      setKelvin(celsiusToKelvin(celsiusVal).toFixed(1));
     }
   };
 
@@ -42,13 +48,20 @@ export default function TemperatureConverter() {
       setFahrenheit('');
     } else {
       const kelvinNum = parseFloat(value);
-      setCelsius((kelvinNum - 273.15).toFixed(1));
-      setFahrenheit(((kelvinNum - 273.15) * 9/5 + 32).toFixed(1));
+      const celsiusVal = kelvinNum - 273.15;
+      setCelsius(celsiusVal.toFixed(1));
+      setFahrenheit(celsiusToFahrenheit(celsiusVal).toFixed(1));
     }
   };
 
   const handleClose = () => {
-    console.log("Close button clicked");
+    // Reset all fields
+    setCelsius('');
+    setFahrenheit('');
+    setKelvin('');
+    // Call parent's close handler
+    if (onClose) onClose();
+  };
 
   return (
     <div className="calculator-container">
@@ -101,11 +114,11 @@ export default function TemperatureConverter() {
             value={kelvin}
             onChange={handleKelvinChange}
             placeholder="273.15"
+            min="0"
           />
           <span className="unit-label">K</span>
         </div>
       </div>
     </div>
   );
-}
 }

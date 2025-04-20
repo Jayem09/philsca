@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './WeightCal.css';
 
-const ConversionCalculator = () => {
-  const [isOpen, setIsOpen] = useState(true);
+const WeightCal = ({ onClose }) => {
   const [amount, setAmount] = useState('1');
   const [result, setResult] = useState('1000');
-
-  const closebtn = () => {
-    console.log("Close button clicked");
-    setIsOpen(false);
-  };
 
   const handleAmountChange = (e) => {
     const value = e.target.value;
@@ -18,10 +12,10 @@ const ConversionCalculator = () => {
     if (value === '' || isNaN(value)) {
       setResult('');
     } else {
-      const calculatedResult = (parseFloat(value) * 1000).toLocaleString('en-US', {
+      const calculatedResult = parseFloat(value) * 1000; // Fixed syntax here
+      setResult(calculatedResult.toLocaleString('en-US', {
         maximumFractionDigits: 2
-      });
-      setResult(calculatedResult);
+      }));
     }
   };
 
@@ -32,15 +26,13 @@ const ConversionCalculator = () => {
     }
   }, []);
 
-  if (!isOpen) {
-    return null;
-  }
+  const handleClose = () => {
+    if (onClose) onClose();
+  };
 
   return (
     <div className="calculator-container">
-      <button className='closebtn' onClick={closebtn}>
-        X
-      </button>
+      <button className="closebtn" onClick={handleClose}>×</button>
       <h1 className="calculator-title">Weight Converter</h1>
       <div className="conversion-calculator">
         <div className="field-group">
@@ -87,4 +79,4 @@ const ConversionCalculator = () => {
   );
 };
 
-export default ConversionCalculator;
+export default WeightCal;

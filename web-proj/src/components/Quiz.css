@@ -57,7 +57,7 @@
   border: 2px solid #e2e8f0;
   border-radius: 0.75rem;
   background: white;
-  color: #334155;
+  color:rgb(42, 116, 220);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: left;

@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import "bootstrap/dist/css/bootstrap.min.css";
 import WeightCal from "../components/WeightCal";
 import { FaBars, FaChevronDown, FaChevronUp, FaSearch } from "react-icons/fa";
-import ConversionCalculator from "../components/WeightCal";
 import PDFFrame from "../components/pdfFrame";
 import Quiz from "../components/Quiz";
 import "./landingPage.css";
@@ -72,42 +71,29 @@ export default function LandingPage() {
       setShowHome(true);
       setIsOpen(false);
     } else if (item.name === "Quiz") {
-      console.log("Quiz selected");
       setSelectedComponent(<Quiz />);
       setSelectedPdf(null);
       setShowHome(false);
       setIsOpen(false);
     } else if (item.name === "Weight Converter") {
-      console.log("Weight item clicked");
-      setSelectedComponent(<WeightCal />);
+      setSelectedComponent(
+        <WeightCal onClose={() => setSelectedComponent(null)} />
+      );
       setSelectedPdf(null);
       setShowHome(false);
       setIsOpen(false);
     } else if (item.name === "Temperature Converter") {
-      console.log("Temperature Converter item clicked");
-      setSelectedComponent(<TemperatureConverter />);
+      setSelectedComponent(
+        <TemperatureConverter onClose={() => setSelectedComponent(null)} />
+      );
       setSelectedPdf(null);
       setShowHome(false);
       setIsOpen(false);
-    } else if (item.name === "Conversion Calculator") {
-      setSelectedComponent(<ConversionCalculator />);
-      setSelectedPdf(null);
-      setShowHome(false);
-      setIsOpen(false);
-    // } else if (item.name === "Dynamic Simulation") {
-    //   setSelectedComponent(<div className="dynamic-simulation">
-    //     <h2>Dynamic Simulation</h2>
-    //     <p>Dynamic simulation coming soon...</p>
-    //   </div>);
-    //   setSelectedPdf(null);
-    //   setShowHome(false);
-    //   setIsOpen(false);
     } else {
       setSelectedComponent(null);
       setShowHome(false);
     }
   };
-
   return (
     <div className="landing-page">
       <nav className="navbar navbar-light bg-transparent position-absolute w-100 p-3 d-flex justify-content-between">

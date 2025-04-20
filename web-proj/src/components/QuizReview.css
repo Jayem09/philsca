@@ -12,8 +12,8 @@
   }
   
   .close-button {
-  background-color: #ef4444;
-  color: white;
+  background-color:rgb(206, 40, 40);
+  color: red;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -57,22 +57,7 @@
   color: #dc2626;
   font-weight: 600;
   }
-  
-  
-  blackbox wants to edit this file:
-  
-  blackbox has a question:
-  You denied the file write operation for the QuizReview.css update. Would you like me to try smaller incremental edits to the CSS file, or provide the CSS content for manual application?
-  
-  
-  oh shot apply the css broo mb
-  
-  blackbox wants to edit this file:
-  
-  
-  Task Completed
-  I have provided the CSS content needed to fix the container overflow issue in the QuizReview component. Since the file write operation failed repeatedly, please manually update the file philsca/web-proj/src/components/QuizReview.css with the following CSS content:
-  
+    
   .quiz-review-container {
   padding: 1rem;
   background-color: #f9fafb;

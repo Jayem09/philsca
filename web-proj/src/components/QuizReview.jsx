@@ -5,7 +5,7 @@ const QuizReview = ({ quizQuestions, userAnswers, onClose }) => {
     return (
         <div className="quiz-review-container">
             <button className="close-button" onClick={onClose}>
-                Close Review
+                Close Section
             </button>
             <h2>Review Answers</h2>
             {quizQuestions.map((question, index) => {

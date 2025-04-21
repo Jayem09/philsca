@@ -152,7 +152,7 @@ const quizQuestions = [
 ];
 
 
- 
+
 
 const Quiz = ({ onClose }) => { // Accepting onClose prop for the close button
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -193,14 +193,10 @@ const Quiz = ({ onClose }) => { // Accepting onClose prop for the close button
 
   return (
     <div className="quiz-container">
-      <button className="close-button" onClick={onClose}>
-        <FaTimes size={18} />
-      </button>
-
       {showScore ? (
         <div className="score-section">
           You scored {score} out of {quizQuestions.length}
-          <button onClick={handleReviewClick} style={{ cursor: 'pointer', marginTop: '1rem' }}>
+          <button className="review-button" onClick={handleReviewClick} style={{ cursor: 'pointer', marginTop: '1rem' }}>
             Review Answers
           </button>
         </div>

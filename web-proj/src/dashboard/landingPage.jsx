@@ -3,13 +3,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import "bootstrap/dist/css/bootstrap.min.css";
 import WeightCal from "../components/WeightCal";
 import { FaBars, FaChevronDown, FaChevronUp, FaSearch } from "react-icons/fa";
-import ConversionCalculator from "../components/WeightCal"; // Import the new ConversionCalculator component
-import PDFFrame from "../components/pdfFrame"; // Importing the updated PDFFrame component
-import Quiz from "../components/Quiz"; // Importing the Quiz component
+import PDFFrame from "../components/pdfFrame";
+import Quiz from "../components/Quiz";
 import "./landingPage.css";
 import TemperatureConverter from "../components/TemperatureConverter";
-import "./landingPageResponsive.css"; // Importing the new responsive styles
-import "./navbarStyles.css"; // Importing the new navbar styles
+import "./landingPageResponsive.css";
+import "./navbarStyles.css";
 
 const menuItems = [
   { name: "Home" },
@@ -17,33 +16,31 @@ const menuItems = [
     name: "Module 1",
     hasChildren: true,
     children: [
-      { name: "Topic 1", pdf: "/pdf/topic1.pdf" },
-      { name: "Topic 2", pdf: "/pdf/topic2.pdf" },
-      { name: "Topic 3", pdf: "/pdf/topic3.pdf" },
+      { name: "Topic 1", pdf: "/pdf/Module 1 (Topic 1).pdf" },
+      { name: "Topic 2", pdf: "/pdf/Module 1 (Topic 2).pdf" },
     ],
   },
   {
     name: "Module 2",
     hasChildren: true,
     children: [
-      { name: "Topic 1", pdf: "/pdf/topic1.pdf" },
-      { name: "Topic 2", pdf: "/pdf/topic2.pdf" },
-      { name: "Topic 3", pdf: "/pdf/topic3.pdf" },
+      { name: "Topic 1", pdf: "/pdf/Module 2 (Topic 1).pdf" },
+      { name: "Topic 2", pdf: "/pdf/Module 2 (Topic 2).pdf" },
+ 
     ],
   },
   {
     name: "Module 3",
     hasChildren: true,
     children: [
-      { name: "Topic 1", pdf: "/pdf/topic1.pdf" },
-      { name: "Topic 2", pdf: "/pdf/topic2.pdf" },
+      { name: "Topic 1", pdf: "/pdf/Module 3 (Topic 1).pdf" },
+      { name: "Topic 2", pdf: "/pdf/Module 3 (Topic 2).pdf" },
       { name: "Topic 3", pdf: "/pdf/topic3.pdf" },
     ],
   },
   { name: "Quiz" },
   { name: "Weight Converter" },
-  { name: "Temperature Converter" },
-  { name: "Dynamic Simulation"}
+  { name: "Temperature Converter" }
 ];
 
 export default function LandingPage() {
@@ -53,13 +50,13 @@ export default function LandingPage() {
   const [selectedPdf, setSelectedPdf] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedComponent, setSelectedComponent] = useState(null); // New state to manage selected component
-  const [showHome, setShowHome] = useState(true); // New state to control home content visibility
+  const [selectedComponent, setSelectedComponent] = useState(null);
+  const [showHome, setShowHome] = useState(true);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
     if (!isOpen) {
-      document.querySelector('.search-input').focus(); // Focus on the search input when sidebar opens
+      document.querySelector('.search-input').focus();
     }
   };
 
@@ -67,43 +64,28 @@ export default function LandingPage() {
     setExpandedModule(expandedModule === index ? null : index);
   };
 
-  // Function to handle menu item click
   const handleMenuItemClick = (item) => {
     if (item.name === "Home") {
-      setSelectedComponent(null); // Reset component
-      setSelectedPdf(null); // Clear any selected PDF
-      setShowHome(true); // Show home content
-      setIsOpen(false); // Close sidebar
+      setSelectedComponent(null);
+      setSelectedPdf(null);
+      setShowHome(true);
+      setIsOpen(false);
     } else if (item.name === "Quiz") {
-      console.log("Quiz selected");
-      setSelectedComponent(<Quiz />); // Set the selected component to Quiz
-      setSelectedPdf(null); // Clear any selected PDF
-      setShowHome(false); // Hide home content
-      setIsOpen(false); // Close sidebar
-    } else if (item.name === "Weight Converter") { // Check for the "Weight" child item
-      console.log("Weight item clicked"); // Log to confirm the click
-      setSelectedComponent(<WeightCal />); // Render the ConversionCalculator component
+      setSelectedComponent(<Quiz />);
       setSelectedPdf(null);
       setShowHome(false);
       setIsOpen(false);
-    } else if (item.name === "Temperature Converter") { // Check for the "Temperature Converter" child item
-      console.log("Temperature Converter item clicked"); // Log to confirm the click
-      setSelectedComponent(<TemperatureConverter />); // Render the TemperatureConverter component
+    } else if (item.name === "Weight Converter") {
+      setSelectedComponent(
+        <WeightCal onClose={() => setSelectedComponent(null)} />
+      );
       setSelectedPdf(null);
       setShowHome(false);
       setIsOpen(false);
-    } else if (item.name === "Conversion Calculator") {
-      // Existing logic for Conversion Calculator
-      setSelectedComponent(<ConversionCalculator />); // Render the ConversionCalculator component
-      setSelectedPdf(null);
-      setShowHome(false);
-      setIsOpen(false);
-    } else if (item.name === "Dynamic Simulation") {
-      // Handle dynamic simulation (add implementation later)
-      setSelectedComponent(<div className="dynamic-simulation">
-        <h2>Dynamic Simulation</h2>
-        <p>Dynamic simulation coming soon...</p>
-      </div>);
+    } else if (item.name === "Temperature Converter") {
+      setSelectedComponent(
+        <TemperatureConverter onClose={() => setSelectedComponent(null)} />
+      );
       setSelectedPdf(null);
       setShowHome(false);
       setIsOpen(false);
@@ -112,7 +94,6 @@ export default function LandingPage() {
       setShowHome(false);
     }
   };
-
   return (
     <div className="landing-page">
       <nav className="navbar navbar-light bg-transparent position-absolute w-100 p-3 d-flex justify-content-between">
@@ -140,9 +121,6 @@ export default function LandingPage() {
         transition={{ duration: 0.3 }}
       >
         <div className="sidebar-header">
-          {/* <button className="close-button" onClick={toggleSidebar}>
-            <FaTimes size={20} />
-          </button> */}
         </div>
         <ul>
           {menuItems.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase())).map((item, index) => (
@@ -217,30 +195,6 @@ export default function LandingPage() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              {/* <h1>Welcome to the Learning Platform</h1> */}
-              {/* <div className="home-cards">
-                <div className="card">
-                  <div className="card-body">
-                    <h5 className="card-title">Modules</h5>
-                    <p className="card-text">Explore our educational modules with interactive content.</p>
-                    <button className="btn btn-primary" onClick={() => toggleModule(1)}>View Modules</button>
-                  </div>
-                </div>
-                <div className="card">
-                  <div className="card-body">
-                    <h5 className="card-title">Quiz</h5>
-                    <p className="card-text">Test your knowledge with our interactive quizzes.</p>
-                    <button className="btn btn-primary" onClick={() => handleMenuItemClick({ name: "Quiz" })}>Start Quiz</button>
-                  </div>
-                </div>
-                <div className="card">
-                  <div className="card-body">
-                    <h5 className="card-title">Tools</h5>
-                    <p className="card-text">Use our conversion calculator and dynamic simulations.</p>
-                    <button className="btn btn-primary" onClick={() => handleMenuItemClick({ name: "Conversion Calculator" })}>Open Tools</button>
-                  </div>
-                </div>
-              </div> */}
             </motion.div>
           )}
         </AnimatePresence>

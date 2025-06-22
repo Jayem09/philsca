@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import './Quiz.css'; // Importing the Quiz styles
 import { FaTimes } from 'react-icons/fa'; // Importing the X icon
-
-const handleCloseQuiz = () => {
-  setShowQuiz(false);
-}
+import QuizReview from './QuizReview';
 
 const quizQuestions = [
   {
@@ -151,24 +148,27 @@ const quizQuestions = [
     question: "It helps to determine whether the flow in a body and its scaled version are aerodynamically similar.",
     options: ["Reynold's number", "mach number", "chord", "viscosity"],
     answer: "Reynold's number"
-  },
-  {
-    question: "What is the Reynold's number of an airfoil with a chord length of 0.01 m, a density at sea level condition and a velocity of 240 m/s.",
-    options: ["164, 300. 8830", "310,208.9645", "89,937.9167", "192,677.2392"],
-    answer: "164, 300. 8830"
   }
 ];
+
+
+
 
 const Quiz = ({ onClose }) => { // Accepting onClose prop for the close button
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
-  const [isReviewing, setIsReviewing] = useState(false); // New state for reviewing answers
+  const [isReviewing, setIsReviewing] = useState(false);
+  const [userAnswers, setUserAnswers] = useState([]);
 
   const handleAnswerOptionClick = (answer) => {
     if (answer === quizQuestions[currentQuestionIndex].answer) {
       setScore(score + 1);
     }
+    const updatedUserAnswers = [...userAnswers];
+    updatedUserAnswers[currentQuestionIndex] = answer;
+    setUserAnswers(updatedUserAnswers);
+
     const nextQuestion = currentQuestionIndex + 1;
     if (nextQuestion < quizQuestions.length) {
       setCurrentQuestionIndex(nextQuestion);
@@ -177,31 +177,28 @@ const Quiz = ({ onClose }) => { // Accepting onClose prop for the close button
     }
   };
 
+  if (isReviewing) {
+    return (
+      <QuizReview
+        quizQuestions={quizQuestions}
+        userAnswers={userAnswers}
+        onClose={() => setIsReviewing(false)}
+      />
+    );
+  }
+
   const handleReviewClick = () => {
     setIsReviewing(true);
   };
 
   return (
     <div className="quiz-container">
-      <button className="close-button" onClick={onClose}>
-        <FaTimes size={18} />
-      </button>
-
       {showScore ? (
         <div className="score-section">
           You scored {score} out of {quizQuestions.length}
-          <button onClick={handleReviewClick}>Review Answers</button> {/* Review button */}
-        </div>
-      ) : isReviewing ? (
-        <div className="review-section">
-          {quizQuestions.map((question, index) => (
-            <div key={index} className="review-question">
-              <div className="question">{question.question}</div>
-              <div className="user-answer" style={{ color: question.answer === quizQuestions[index].options[0] ? 'green' : 'red' }}>
-                Your answer: {question.answer}
-              </div>
-            </div>
-          ))}
+          <button className="review-button" onClick={handleReviewClick} style={{ cursor: 'pointer', marginTop: '1rem' }}>
+            Review Answers
+          </button>
         </div>
       ) : (
         <>

@@ -23,6 +23,9 @@
   margin-bottom: 2rem;
   position: relative;
 }
+.close-button{
+ color: red;
+}
 
 .question {
   font-size: 1.5rem;
@@ -57,7 +60,7 @@
   border: 2px solid #e2e8f0;
   border-radius: 0.75rem;
   background: white;
-  color: #334155;
+  color:rgb(42, 116, 220);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: left;
@@ -105,14 +108,17 @@
 
 .score-section {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--success-color);
   text-align: center;
-  padding: 1.5rem;
+  padding: 2.5rem;
   border-radius: 0.75rem;
   background: #f0fdf4;
-  margin-top: 2rem;
+  margin-top: 4rem;
   animation: score-appear 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.review-button{
+  margin-left: 20px
 }
 
 @keyframes score-appear {

@@ -13,44 +13,8 @@ function QuizLeaderboardSystem() {
     const [quizActive, setQuizActive] = useState(false);
     const [showResults, setShowResults] = useState(false);
 
-    // Sample quiz questions - In a real app, this would come from a database
-    const [questions, setQuestions] = useState([
-        {
-            id: 1,
-            question: "At what altitude does the temperature typically decrease by 6.5°C per kilometer?",
-            options: ["Troposphere", "Stratosphere", "Mesosphere", "Thermosphere"],
-            correct: "Troposphere",
-            points: 10
-        },
-        {
-            id: 2,
-            question: "What is the standard atmospheric pressure at sea level?",
-            options: ["101,325 Pa", "100,000 Pa", "98,000 Pa", "105,000 Pa"],
-            correct: "101,325 Pa",
-            points: 10
-        },
-        {
-            id: 3,
-            question: "How does air density change with altitude?",
-            options: ["Increases", "Decreases", "Stays constant", "Fluctuates randomly"],
-            correct: "Decreases",
-            points: 10
-        },
-        {
-            id: 4,
-            question: "What affects the speed of sound in air?",
-            options: ["Pressure only", "Temperature only", "Both pressure and temperature", "Humidity only"],
-            correct: "Temperature only",
-            points: 10
-        },
-        {
-            id: 5,
-            question: "At approximately what altitude does commercial aviation typically cruise?",
-            options: ["5,000-8,000m", "10,000-12,000m", "15,000-18,000m", "20,000-25,000m"],
-            correct: "10,000-12,000m",
-            points: 10
-        }
-    ]);
+    // Empty questions array - start with no default questions
+    const [questions, setQuestions] = useState([]);
 
     // Leaderboard data - In a real app, this would be stored in a database
     const [leaderboard, setLeaderboard] = useState([
@@ -71,19 +35,23 @@ function QuizLeaderboardSystem() {
     // Timer effect
     useEffect(() => {
         let interval;
-        if (quizActive && timeLeft > 0) {
+        if (quizActive && timeLeft > 0 && questions.length > 0) {
             interval = setInterval(() => {
                 setTimeLeft(timeLeft - 1);
             }, 1000);
-        } else if (timeLeft === 0) {
+        } else if (timeLeft === 0 && quizActive) {
             handleNextQuestion();
         }
         return () => clearInterval(interval);
-    }, [quizActive, timeLeft]);
+    }, [quizActive, timeLeft, questions.length]);
 
     const startQuiz = () => {
         if (!studentName.trim()) {
             alert('Please enter your name first!');
+            return;
+        }
+        if (questions.length === 0) {
+            alert('No questions available! Please contact the admin to add questions.');
             return;
         }
         setQuizActive(true);
@@ -92,6 +60,7 @@ function QuizLeaderboardSystem() {
         setTimeLeft(30);
         setQuizCompleted(false);
         setShowResults(false);
+        setSelectedAnswer('');
     };
 
     const handleAnswerSelect = (answer) => {
@@ -99,8 +68,10 @@ function QuizLeaderboardSystem() {
     };
 
     const handleNextQuestion = () => {
-        if (selectedAnswer === questions[currentQuestionIndex].correct) {
-            setScore(score + questions[currentQuestionIndex].points);
+        // Check if current question exists and has the correct answer
+        const currentQuestion = questions[currentQuestionIndex];
+        if (currentQuestion && selectedAnswer === currentQuestion.correct) {
+            setScore(score + currentQuestion.points);
         }
 
         if (currentQuestionIndex < questions.length - 1) {
@@ -117,10 +88,17 @@ function QuizLeaderboardSystem() {
         setQuizCompleted(true);
         setShowResults(true);
 
+        // Calculate final score including the last question if answered correctly
+        let finalScore = score;
+        const lastQuestion = questions[currentQuestionIndex];
+        if (lastQuestion && selectedAnswer === lastQuestion.correct) {
+            finalScore += lastQuestion.points;
+        }
+
         // Add to leaderboard
         const newEntry = {
             name: studentName,
-            score: score + (selectedAnswer === questions[currentQuestionIndex]?.correct ? questions[currentQuestionIndex].points : 0),
+            score: finalScore,
             time: new Date().toLocaleString(),
             rank: 0
         };
@@ -132,6 +110,7 @@ function QuizLeaderboardSystem() {
         });
 
         setLeaderboard(updatedLeaderboard);
+        setScore(finalScore); // Update the score state for display
     };
 
     const handleAdminLogin = () => {
@@ -144,26 +123,50 @@ function QuizLeaderboardSystem() {
     };
 
     const handleAddQuestion = () => {
-        if (newQuestion.question && newQuestion.options.every(opt => opt) && newQuestion.correct) {
-            const questionToAdd = {
-                id: questions.length + 1,
-                ...newQuestion
-            };
-            setQuestions([...questions, questionToAdd]);
-            setNewQuestion({
-                question: '',
-                options: ['', '', '', ''],
-                correct: '',
-                points: 10
-            });
-            alert('Question added successfully!');
-        } else {
-            alert('Please fill in all fields!');
+        // Validate all fields are filled
+        if (!newQuestion.question.trim()) {
+            alert('Please enter a question!');
+            return;
         }
+
+        if (!newQuestion.options.every(opt => opt.trim())) {
+            alert('Please fill in all options!');
+            return;
+        }
+
+        if (!newQuestion.correct.trim()) {
+            alert('Please specify the correct answer!');
+            return;
+        }
+
+        // Check if the correct answer matches one of the options
+        if (!newQuestion.options.some(opt => opt.trim() === newQuestion.correct.trim())) {
+            alert('The correct answer must match exactly one of the options!');
+            return;
+        }
+
+        const questionToAdd = {
+            id: Date.now(), // Use timestamp as unique ID
+            question: newQuestion.question.trim(),
+            options: newQuestion.options.map(opt => opt.trim()),
+            correct: newQuestion.correct.trim(),
+            points: newQuestion.points || 10
+        };
+
+        setQuestions([...questions, questionToAdd]);
+        setNewQuestion({
+            question: '',
+            options: ['', '', '', ''],
+            correct: '',
+            points: 10
+        });
+        alert('Question added successfully!');
     };
 
     const handleDeleteQuestion = (id) => {
-        setQuestions(questions.filter(q => q.id !== id));
+        if (window.confirm('Are you sure you want to delete this question?')) {
+            setQuestions(questions.filter(q => q.id !== id));
+        }
     };
 
     const resetQuiz = () => {
@@ -260,7 +263,8 @@ function QuizLeaderboardSystem() {
         backgroundColor: selected ? '#e3f2fd' : 'white',
         cursor: 'pointer',
         fontSize: '16px',
-        transition: 'all 0.3s ease'
+        transition: 'all 0.3s ease',
+        color: selected ? '#000' : '#333' // Change text color based on selection
     });
 
     const timerStyle = {
@@ -291,33 +295,51 @@ function QuizLeaderboardSystem() {
         <div style={contentStyle}>
             {!quizActive && !showResults && (
                 <div style={{ textAlign: 'center' }}>
-                    <h2 style={{ marginBottom: '30px', color: '#333' }}>Atmospheric Properties Quiz</h2>
-                    <input
-                        type="text"
-                        placeholder="Enter your name"
-                        value={studentName}
-                        onChange={(e) => setStudentName(e.target.value)}
-                        style={inputStyle}
-                    />
-                    <button
-                        onClick={startQuiz}
-                        style={{
-                            ...buttonStyle(true),
-                            fontSize: '18px',
-                            padding: '15px 30px',
-                            marginTop: '20px'
-                        }}
-                    >
-                        Start Quiz
-                    </button>
-                    <p style={{ marginTop: '20px', color: '#666' }}>
-                        Answer {questions.length} questions about atmospheric properties.<br />
-                        You have 30 seconds per question. Good luck!
-                    </p>
+                    <h2 style={{ marginBottom: '30px', color: '#333' }}>Quiz System</h2>
+                    {questions.length === 0 ? (
+                        <div style={questionCardStyle}>
+                            <h3 style={{ color: '#dc3545', marginBottom: '20px' }}>No Questions Available</h3>
+                            <p style={{ color: '#666', marginBottom: '20px' }}>
+                                There are currently no questions in the system.
+                                Please contact the administrator to add questions before taking the quiz.
+                            </p>
+                            <button
+                                onClick={() => setCurrentView('admin')}
+                                style={buttonStyle(true)}
+                            >
+                                Go to Admin Panel
+                            </button>
+                        </div>
+                    ) : (
+                        <>
+                            <input
+                                type="text"
+                                placeholder="Enter your name"
+                                value={studentName}
+                                onChange={(e) => setStudentName(e.target.value)}
+                                style={inputStyle}
+                            />
+                            <button
+                                onClick={startQuiz}
+                                style={{
+                                    ...buttonStyle(true),
+                                    fontSize: '18px',
+                                    padding: '15px 30px',
+                                    marginTop: '20px'
+                                }}
+                            >
+                                Start Quiz
+                            </button>
+                            <p style={{ marginTop: '20px', color: '#666' }}>
+                                Answer {questions.length} questions.<br />
+                                You have 30 seconds per question. Good luck!
+                            </p>
+                        </>
+                    )}
                 </div>
             )}
 
-            {quizActive && (
+            {quizActive && questions.length > 0 && questions[currentQuestionIndex] && (
                 <div>
                     <div style={timerStyle}>
                         Time Left: {timeLeft}s
@@ -365,7 +387,7 @@ function QuizLeaderboardSystem() {
                             Score: {score} / {questions.length * 10}
                         </p>
                         <p style={{ fontSize: '18px', marginBottom: '20px' }}>
-                            Percentage: {((score / (questions.length * 10)) * 100).toFixed(1)}%
+                            Percentage: {questions.length > 0 ? ((score / (questions.length * 10)) * 100).toFixed(1) : 0}%
                         </p>
                         <button onClick={resetQuiz} style={{ ...buttonStyle(true), marginRight: '10px' }}>
                             Take Quiz Again
@@ -464,7 +486,7 @@ function QuizLeaderboardSystem() {
                             ))}
                             <input
                                 type="text"
-                                placeholder="Correct Answer"
+                                placeholder="Correct Answer (must match one of the options exactly)"
                                 value={newQuestion.correct}
                                 onChange={(e) => setNewQuestion({ ...newQuestion, correct: e.target.value })}
                                 style={inputStyle}
@@ -472,8 +494,9 @@ function QuizLeaderboardSystem() {
                             <input
                                 type="number"
                                 placeholder="Points"
+                                min="1"
                                 value={newQuestion.points}
-                                onChange={(e) => setNewQuestion({ ...newQuestion, points: parseInt(e.target.value) })}
+                                onChange={(e) => setNewQuestion({ ...newQuestion, points: parseInt(e.target.value) || 10 })}
                                 style={inputStyle}
                             />
                             <button onClick={handleAddQuestion} style={buttonStyle(true)}>
@@ -483,29 +506,47 @@ function QuizLeaderboardSystem() {
                     </div>
 
                     <div>
-                        <h3 style={{ marginBottom: '20px' }}>Manage Questions</h3>
-                        {questions.map((question, index) => (
-                            <div key={question.id} style={{
-                                ...questionCardStyle,
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center'
-                            }}>
-                                <div style={{ flex: 1 }}>
-                                    <strong>Q{index + 1}:</strong> {question.question}
-                                </div>
-                                <button
-                                    onClick={() => handleDeleteQuestion(question.id)}
-                                    style={{
-                                        ...buttonStyle(),
-                                        backgroundColor: '#dc3545',
-                                        marginLeft: '10px'
-                                    }}
-                                >
-                                    Delete
-                                </button>
+                        <h3 style={{ marginBottom: '20px' }}>
+                            Manage Questions ({questions.length} total)
+                        </h3>
+                        {questions.length === 0 ? (
+                            <div style={questionCardStyle}>
+                                <p style={{ textAlign: 'center', color: '#666' }}>
+                                    No questions added yet. Add your first question above!
+                                </p>
                             </div>
-                        ))}
+                        ) : (
+                            questions.map((question, index) => (
+                                <div key={question.id} style={{
+                                    ...questionCardStyle,
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'flex-start'
+                                }}>
+                                    <div style={{ flex: 1 }}>
+                                        <div style={{ marginBottom: '10px' }}>
+                                            <strong>Q{index + 1}:</strong> {question.question}
+                                        </div>
+                                        <div style={{ fontSize: '14px', color: '#666', marginBottom: '5px' }}>
+                                            <strong>Options:</strong> {question.options.join(', ')}
+                                        </div>
+                                        <div style={{ fontSize: '14px', color: '#28a745' }}>
+                                            <strong>Correct:</strong> {question.correct} ({question.points} points)
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => handleDeleteQuestion(question.id)}
+                                        style={{
+                                            ...buttonStyle(),
+                                            backgroundColor: '#dc3545',
+                                            marginLeft: '10px'
+                                        }}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            ))
+                        )}
                     </div>
                 </div>
             )}

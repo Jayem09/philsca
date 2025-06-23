@@ -15,12 +15,14 @@ const firebaseConfig = {
 // Firebase SDK setup
 let firebaseApp = null;
 let database = null;
+let auth = null;
 
 const initializeFirebase = async () => {
     try {
         // Dynamically import Firebase
         const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js');
         const { getDatabase, ref, push, remove, onValue, off } = await import('https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js');
+        const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js');
 
         // Initialize Firebase if not already initialized
         if (getApps().length === 0) {
@@ -30,8 +32,9 @@ const initializeFirebase = async () => {
         }
 
         database = getDatabase(firebaseApp);
+        auth = getAuth(firebaseApp);
 
-        return { ref, push, remove, onValue, off };
+        return { ref, push, remove, onValue, off, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged };
     } catch (error) {
         console.error('Error initializing Firebase:', error);
         throw error;
@@ -41,7 +44,15 @@ const initializeFirebase = async () => {
 function FirebaseQuizSystem() {
     const [currentView, setCurrentView] = useState('quiz');
     const [isAdmin, setIsAdmin] = useState(false);
-    const [adminPassword, setAdminPassword] = useState('');
+    const [currentUser, setCurrentUser] = useState(null);
+    const [authMode, setAuthMode] = useState('login'); // 'login' or 'signup'
+    const [authForm, setAuthForm] = useState({
+        email: '',
+        password: '',
+        confirmPassword: ''
+    });
+    const [authError, setAuthError] = useState('');
+    const [authLoading, setAuthLoading] = useState(false);
     const [studentName, setStudentName] = useState('');
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState('');
@@ -70,6 +81,7 @@ function FirebaseQuizSystem() {
     useEffect(() => {
         let questionsUnsubscribe;
         let leaderboardUnsubscribe;
+        let authUnsubscribe;
 
         const setupFirebase = async () => {
             try {
@@ -80,7 +92,19 @@ function FirebaseQuizSystem() {
                 setFirebaseFunctions(functions);
                 setFirebaseReady(true);
 
-                const { ref, onValue } = functions;
+                const { ref, onValue, onAuthStateChanged } = functions;
+
+                // Set up auth state listener
+                authUnsubscribe = onAuthStateChanged(auth, (user) => {
+                    setCurrentUser(user);
+                    setIsAdmin(!!user); // User is admin if authenticated
+                    if (user && currentView === 'admin') {
+                        // Keep admin view if user is logged in
+                    } else if (!user && currentView === 'admin') {
+                        // Redirect to quiz if user logs out
+                        setCurrentView('quiz');
+                    }
+                });
 
                 // Set up questions listener
                 const questionsRef = ref(database, 'questions');
@@ -153,6 +177,7 @@ function FirebaseQuizSystem() {
         return () => {
             if (questionsUnsubscribe) questionsUnsubscribe();
             if (leaderboardUnsubscribe) leaderboardUnsubscribe();
+            if (authUnsubscribe) authUnsubscribe();
         };
     }, []);
 
@@ -168,6 +193,88 @@ function FirebaseQuizSystem() {
         }
         return () => clearInterval(interval);
     }, [quizActive, timeLeft, questions.length]);
+
+    // Authentication functions
+    const handleAuthSubmit = async (e) => {
+        e.preventDefault();
+        setAuthError('');
+        setAuthLoading(true);
+
+        if (!firebaseReady || !firebaseFunctions) {
+            setAuthError('Firebase not connected. Please check your connection.');
+            setAuthLoading(false);
+            return;
+        }
+
+        const { email, password, confirmPassword } = authForm;
+
+        if (!email || !password) {
+            setAuthError('Please fill in all fields.');
+            setAuthLoading(false);
+            return;
+        }
+
+        if (authMode === 'signup' && password !== confirmPassword) {
+            setAuthError('Passwords do not match.');
+            setAuthLoading(false);
+            return;
+        }
+
+        if (password.length < 6) {
+            setAuthError('Password must be at least 6 characters long.');
+            setAuthLoading(false);
+            return;
+        }
+
+        try {
+            const { createUserWithEmailAndPassword, signInWithEmailAndPassword } = firebaseFunctions;
+
+            if (authMode === 'signup') {
+                await createUserWithEmailAndPassword(auth, email, password);
+            } else {
+                await signInWithEmailAndPassword(auth, email, password);
+            }
+
+            // Reset form
+            setAuthForm({ email: '', password: '', confirmPassword: '' });
+            setCurrentView('admin');
+        } catch (error) {
+            console.error('Auth error:', error);
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    setAuthError('Email is already registered. Please use login instead.');
+                    break;
+                case 'auth/invalid-email':
+                    setAuthError('Invalid email address.');
+                    break;
+                case 'auth/user-not-found':
+                    setAuthError('No account found with this email. Please sign up first.');
+                    break;
+                case 'auth/wrong-password':
+                    setAuthError('Incorrect password.');
+                    break;
+                case 'auth/too-many-requests':
+                    setAuthError('Too many failed attempts. Please try again later.');
+                    break;
+                default:
+                    setAuthError('Authentication failed. Please try again.');
+            }
+        } finally {
+            setAuthLoading(false);
+        }
+    };
+
+    const handleLogout = async () => {
+        try {
+            if (firebaseReady && firebaseFunctions) {
+                const { signOut } = firebaseFunctions;
+                await signOut(auth);
+                setCurrentView('quiz');
+            }
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
+    };
 
     const startQuiz = () => {
         if (!studentName.trim()) {
@@ -241,16 +348,6 @@ function FirebaseQuizSystem() {
         }
     };
 
-    const handleAdminLogin = () => {
-        if (adminPassword === 'admin123') {
-            setIsAdmin(true);
-            setCurrentView('admin');
-            setAdminPassword('');
-        } else {
-            alert('Invalid password!');
-        }
-    };
-
     const handleAddQuestion = async () => {
         if (!newQuestion.question.trim()) {
             alert('Please enter a question!');
@@ -278,7 +375,7 @@ function FirebaseQuizSystem() {
             correct: newQuestion.correct.trim(),
             points: newQuestion.points || 10,
             createdAt: Date.now(),
-            createdBy: 'admin'
+            createdBy: currentUser?.email || 'admin'
         };
 
         try {
@@ -486,6 +583,24 @@ function FirebaseQuizSystem() {
         color: '#666'
     };
 
+    const authFormStyle = {
+        maxWidth: '400px',
+        margin: '0 auto',
+        padding: '20px',
+        backgroundColor: 'white',
+        borderRadius: '15px',
+        boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
+    };
+
+    const errorStyle = {
+        color: '#dc3545',
+        backgroundColor: '#f8d7da',
+        padding: '10px',
+        borderRadius: '8px',
+        marginBottom: '15px',
+        fontSize: '14px'
+    };
+
     if (loading) {
         return (
             <div style={containerStyle}>
@@ -683,178 +798,308 @@ function FirebaseQuizSystem() {
         </div>
     );
 
-    const renderAdminView = () => (
+    const renderAdminAuth = () => (
         <div style={contentStyle}>
-            {!isAdmin ? (
-                <div style={{ textAlign: 'center' }}>
-                    <h2 style={{ marginBottom: '30px', color: '#333' }}>Admin Login</h2>
+            <div style={authFormStyle}>
+                <h2 style={{ textAlign: 'center', marginBottom: '30px', color: '#333' }}>
+                    Admin {authMode === 'login' ? 'Login' : 'Sign Up'}
+                </h2>
+
+                {authError && (
+                    <div style={errorStyle}>
+                        {authError}
+                    </div>
+                )}
+
+                <form onSubmit={handleAuthSubmit}>
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        value={authForm.email}
+                        onChange={(e) => setAuthForm({ ...authForm, email: e.target.value })}
+                        style={inputStyle}
+                        required
+                    />
                     <input
                         type="password"
-                        placeholder="Enter admin password"
-                        value={adminPassword}
-                        onChange={(e) => setAdminPassword(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && handleAdminLogin()}
+                        placeholder="Password"
+                        value={authForm.password}
+                        onChange={(e) => setAuthForm({ ...authForm, password: e.target.value })}
+                        style={inputStyle}
+                        required
+                    />
+                    {authMode === 'signup' && (
+                        <input
+                            type="password"
+                            placeholder="Confirm Password"
+                            value={authForm.confirmPassword} onChange={(e) => setAuthForm({ ...authForm, confirmPassword: e.target.value })}
+                            style={inputStyle}
+                            required
+                        />
+                    )}
+                    <button
+                        type="submit"
+                        disabled={authLoading}
+                        style={{
+                            ...buttonStyle(true),
+                            width: '100%',
+                            marginTop: '20px',
+                            opacity: authLoading ? 0.7 : 1
+                        }}
+                    >
+                        {authLoading ? 'Processing...' : (authMode === 'login' ? 'Login' : 'Sign Up')}
+                    </button>
+                </form>
+
+                <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setAuthMode(authMode === 'login' ? 'signup' : 'login');
+                            setAuthError('');
+                            setAuthForm({ email: '', password: '', confirmPassword: '' });
+                        }}
+                        style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#007bff',
+                            textDecoration: 'underline',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        {authMode === 'login' ? 'Need an account? Sign up' : 'Already have an account? Login'}
+                    </button>
+                </div>
+
+                <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '14px', color: '#666' }}>
+                    {!firebaseReady && (
+                        <div style={{ color: '#ffc107', marginBottom: '10px' }}>
+                            ⚠️ Firebase not connected - Auth may not work
+                        </div>
+                    )}
+                    <button
+                        type="button"
+                        onClick={() => setCurrentView('quiz')}
+                        style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#6c757d',
+                            textDecoration: 'underline',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Back to Quiz
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+
+    const renderAdminPanel = () => (
+        <div style={contentStyle}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+                <h2 style={{ color: '#333' }}>Admin Panel</h2>
+                <div>
+                    <span style={{ marginRight: '15px', color: '#666' }}>
+                        Welcome, {currentUser?.email}
+                    </span>
+                    <button onClick={handleLogout} style={buttonStyle()}>
+                        Logout
+                    </button>
+                </div>
+            </div>
+
+            {!firebaseReady && (
+                <div style={{
+                    backgroundColor: '#fff3cd',
+                    border: '1px solid #ffeaa7',
+                    borderRadius: '8px',
+                    padding: '15px',
+                    marginBottom: '20px',
+                    color: '#856404'
+                }}>
+                    <strong>⚠️ Warning:</strong> Firebase connection failed. Admin features may not work properly.
+                </div>
+            )}
+
+            <div style={{ marginBottom: '30px' }}>
+                <h3 style={{ marginBottom: '20px', color: '#333' }}>Add New Question</h3>
+                <div style={questionCardStyle}>
+                    <input
+                        type="text"
+                        placeholder="Enter question"
+                        value={newQuestion.question}
+                        onChange={(e) => setNewQuestion({ ...newQuestion, question: e.target.value })}
                         style={inputStyle}
                     />
-                    <button onClick={handleAdminLogin} style={buttonStyle(true)}>
-                        Login
+
+                    {newQuestion.options.map((option, index) => (
+                        <input
+                            key={index}
+                            type="text"
+                            placeholder={`Option ${index + 1}`}
+                            value={option}
+                            onChange={(e) => {
+                                const newOptions = [...newQuestion.options];
+                                newOptions[index] = e.target.value;
+                                setNewQuestion({ ...newQuestion, options: newOptions });
+                            }}
+                            style={inputStyle}
+                        />
+                    ))}
+
+                    <input
+                        type="text"
+                        placeholder="Correct answer (must match one of the options exactly)"
+                        value={newQuestion.correct}
+                        onChange={(e) => setNewQuestion({ ...newQuestion, correct: e.target.value })}
+                        style={inputStyle}
+                    />
+
+                    <input
+                        type="number"
+                        placeholder="Points"
+                        value={newQuestion.points}
+                        onChange={(e) => setNewQuestion({ ...newQuestion, points: parseInt(e.target.value) || 10 })}
+                        style={inputStyle}
+                        min="1"
+                        max="100"
+                    />
+
+                    <button onClick={handleAddQuestion} style={buttonStyle(true)}>
+                        Add Question
                     </button>
-                    <p style={{ marginTop: '20px', color: '#666', fontSize: '14px' }}>
-
-                    </p>
                 </div>
-            ) : (
-                <div>
-                    <h2 style={{ marginBottom: '30px', color: '#333' }}>Admin Panel - Real-Time Management</h2>
+            </div>
 
-                    <div style={{ ...questionCardStyle, marginBottom: '30px', backgroundColor: firebaseReady ? '#e8f5e8' : '#fff3cd' }}>
-                        <h3 style={{ color: firebaseReady ? '#28a745' : '#856404', marginBottom: '15px' }}>
-                            📊 {firebaseReady ? 'Live Firebase Statistics' : 'Demo Mode Statistics'}
-                        </h3>
-                        <div style={{ display: 'flex', justifyContent: 'space-around', textAlign: 'center' }}>
-                            <div>
-                                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#007bff' }}>{questions.length}</div>
-                                <div style={{ fontSize: '14px', color: '#666' }}>Questions</div>
-                            </div>
-                            <div>
-                                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#28a745' }}>{leaderboard.length}</div>
-                                <div style={{ fontSize: '14px', color: '#666' }}>Participants</div>
-                            </div>
-                            <div>
-                                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#ffc107' }}>
-                                    {leaderboard.length > 0 ? Math.max(...leaderboard.map(l => l.score)) : 0}
-                                </div>
-                                <div style={{ fontSize: '14px', color: '#666' }}>Highest Score</div>
-                            </div>
-                        </div>
-                        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                            <button
-                                onClick={clearLeaderboard}
-                                style={{
-                                    ...buttonStyle(),
-                                    backgroundColor: '#dc3545',
-                                    fontSize: '12px',
-                                    padding: '8px 16px'
-                                }}
-                                disabled={leaderboard.length === 0}
-                            >
-                                Clear Leaderboard
-                            </button>
-                        </div>
+            <div style={{ marginBottom: '30px' }}>
+                <h3 style={{ marginBottom: '20px', color: '#333' }}>
+                    Current Questions ({questions.length})
+                </h3>
+                {questions.length === 0 ? (
+                    <div style={questionCardStyle}>
+                        <p style={{ color: '#666', textAlign: 'center' }}>
+                            No questions added yet. Add your first question above!
+                        </p>
                     </div>
-
-                    <div style={{ marginBottom: '40px' }}>
-                        <h3 style={{ marginBottom: '20px' }}>Add New Question</h3>
-                        <div style={{ ...questionCardStyle, backgroundColor: '#fff3cd' }}>
-                            <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#fff', borderRadius: '8px', fontSize: '14px', color: '#856404' }}>
-                                {firebaseReady ? '⚡ Questions sync instantly to all devices via Firebase' : '⚠️ Demo mode - questions won\'t sync to other devices'}
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="Question"
-                                value={newQuestion.question}
-                                onChange={(e) => setNewQuestion({ ...newQuestion, question: e.target.value })}
-                                style={inputStyle}
-                            />
-                            {newQuestion.options.map((option, index) => (
-                                <input
-                                    key={index}
-                                    type="text"
-                                    placeholder={`Option ${index + 1}`}
-                                    value={option}
-                                    onChange={(e) => {
-                                        const newOptions = [...newQuestion.options];
-                                        newOptions[index] = e.target.value;
-                                        setNewQuestion({ ...newQuestion, options: newOptions });
-                                    }}
-                                    style={inputStyle}
-                                />
-                            ))}
-                            <input
-                                type="text"
-                                placeholder="Correct Answer (must match one of the options exactly)"
-                                value={newQuestion.correct}
-                                onChange={(e) => setNewQuestion({ ...newQuestion, correct: e.target.value })}
-                                style={inputStyle}
-                            />
-                            <input
-                                type="number"
-                                placeholder="Points"
-                                min="1"
-                                value={newQuestion.points}
-                                onChange={(e) => setNewQuestion({ ...newQuestion, points: parseInt(e.target.value) || 10 })}
-                                style={inputStyle}
-                            />
-                            <button onClick={handleAddQuestion} style={{ ...buttonStyle(true), marginTop: '10px' }}>
-                                Add Question
-                            </button>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 style={{ marginBottom: '20px' }}>Manage Questions ({questions.length})</h3>
-                        {questions.length === 0 ? (
-                            <div style={questionCardStyle}>
-                                <p style={{ textAlign: 'center', color: '#666' }}>No questions added yet.</p>
-                            </div>
-                        ) : (
-                            questions.map((question, index) => (
-                                <div key={question.id} style={{ ...questionCardStyle, marginBottom: '20px' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
-                                        <h4 style={{ margin: 0, color: '#333', flex: 1 }}>
-                                            Q{index + 1}: {question.question}
-                                        </h4>
-                                        <button
-                                            onClick={() => handleDeleteQuestion(question.id)}
-                                            style={{
-                                                ...buttonStyle(),
-                                                backgroundColor: '#dc3545',
-                                                padding: '8px 12px',
-                                                fontSize: '12px',
-                                                marginLeft: '15px'
-                                            }}
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
+                ) : (
+                    questions.map((question, index) => (
+                        <div key={question.id} style={{
+                            ...questionCardStyle,
+                            border: '1px solid #e9ecef'
+                        }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                <div style={{ flex: 1 }}>
+                                    <h4 style={{ marginBottom: '15px', color: '#333' }}>
+                                        Question {index + 1}: {question.question}
+                                    </h4>
                                     <div style={{ marginBottom: '10px' }}>
                                         <strong>Options:</strong>
-                                        <ul style={{ margin: '5px 0', paddingLeft: '20px' }}>
+                                        <ul style={{ marginLeft: '20px', marginTop: '5px' }}>
                                             {question.options.map((option, optIndex) => (
-                                                <li
-                                                    key={optIndex}
-                                                    style={{
-                                                        color: option === question.correct ? '#28a745' : '#333',
-                                                        fontWeight: option === question.correct ? 'bold' : 'normal'
-                                                    }}
-                                                >
+                                                <li key={optIndex} style={{
+                                                    color: option === question.correct ? '#28a745' : '#333',
+                                                    fontWeight: option === question.correct ? 'bold' : 'normal'
+                                                }}>
                                                     {option} {option === question.correct && '✓'}
                                                 </li>
                                             ))}
                                         </ul>
                                     </div>
                                     <div style={{ fontSize: '14px', color: '#666' }}>
-                                        <strong>Correct Answer:</strong> {question.correct} |
-                                        <strong> Points:</strong> {question.points}
+                                        <strong>Points:</strong> {question.points} |
+                                        <strong> Correct:</strong> {question.correct}
                                     </div>
+                                    {question.createdBy && (
+                                        <div style={{ fontSize: '12px', color: '#999', marginTop: '5px' }}>
+                                            Created by: {question.createdBy}
+                                        </div>
+                                    )}
                                 </div>
-                            ))
-                        )}
-                    </div>
+                                <button
+                                    onClick={() => handleDeleteQuestion(question.id)}
+                                    style={{
+                                        backgroundColor: '#dc3545',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '6px',
+                                        padding: '8px 12px',
+                                        cursor: 'pointer',
+                                        fontSize: '12px',
+                                        marginLeft: '15px'
+                                    }}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
 
-                    <div style={{ textAlign: 'center', marginTop: '30px' }}>
+            <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <h3 style={{ color: '#333' }}>
+                        Leaderboard Management ({leaderboard.length} entries)
+                    </h3>
+                    {leaderboard.length > 0 && (
                         <button
-                            onClick={() => {
-                                setIsAdmin(false);
-                                setCurrentView('quiz');
+                            onClick={clearLeaderboard}
+                            style={{
+                                backgroundColor: '#dc3545',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '6px',
+                                padding: '10px 15px',
+                                cursor: 'pointer',
+                                fontSize: '14px'
                             }}
-                            style={buttonStyle()}
                         >
-                            Logout
+                            Clear All Scores
                         </button>
-                    </div>
+                    )}
                 </div>
-            )}
+
+                <div style={leaderboardStyle}>
+                    <div style={{
+                        ...leaderboardRowStyle(0),
+                        backgroundColor: '#007bff',
+                        color: 'white',
+                        fontWeight: 'bold'
+                    }}>
+                        <span>Rank</span>
+                        <span>Name</span>
+                        <span>Score</span>
+                        <span>Time</span>
+                    </div>
+                    {leaderboard.length === 0 ? (
+                        <div style={{
+                            padding: '40px',
+                            textAlign: 'center',
+                            color: '#666'
+                        }}>
+                            No quiz attempts yet. Scores will appear here automatically!
+                        </div>
+                    ) : (
+                        leaderboard.slice(0, 10).map((entry, index) => (
+                            <div key={`admin-${entry.id}-${entry.timestamp}`} style={leaderboardRowStyle(entry.rank)}>
+                                <span style={{ fontWeight: 'bold' }}>
+                                    {entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : `#${entry.rank}`}
+                                </span>
+                                <span>{entry.name}</span>
+                                <span style={{ fontWeight: 'bold' }}>{entry.score}</span>
+                                <span style={{ fontSize: '14px', color: '#666' }}>{entry.time}</span>
+                            </div>
+                        ))
+                    )}
+                </div>
+
+                {leaderboard.length > 10 && (
+                    <div style={{ textAlign: 'center', marginTop: '15px', color: '#666', fontSize: '14px' }}>
+                        Showing top 10 entries. Total: {leaderboard.length} participants.
+                    </div>
+                )}
+            </div>
         </div>
     );
 
@@ -866,8 +1111,8 @@ function FirebaseQuizSystem() {
                 </div>
 
                 <div style={headerStyle}>
-                    <h1 style={titleStyle}>Real-Time Quiz System</h1>
-                    <p>Multi-device synchronized learning platform</p>
+                    <h1 style={titleStyle}>🧠 Real-Time Quiz System</h1>
+                    <p>Multi-device synchronized learning platform with Firebase</p>
                 </div>
 
                 <div style={navStyle}>
@@ -875,25 +1120,32 @@ function FirebaseQuizSystem() {
                         onClick={() => setCurrentView('quiz')}
                         style={buttonStyle(currentView === 'quiz')}
                     >
-                        Quiz
+                        📝 Take Quiz
                     </button>
                     <button
                         onClick={() => setCurrentView('leaderboard')}
                         style={buttonStyle(currentView === 'leaderboard')}
                     >
-                        Leaderboard
+                        🏆 Leaderboard
                     </button>
                     <button
-                        onClick={() => setCurrentView('admin')}
-                        style={buttonStyle(currentView === 'admin')}
+                        onClick={() => {
+                            if (currentUser) {
+                                setCurrentView('admin');
+                            } else {
+                                setCurrentView('admin-auth');
+                            }
+                        }}
+                        style={buttonStyle(currentView === 'admin' || currentView === 'admin-auth')}
                     >
-                        Admin
+                        ⚙️ Admin {currentUser ? 'Panel' : 'Login'}
                     </button>
                 </div>
 
                 {currentView === 'quiz' && renderQuizView()}
                 {currentView === 'leaderboard' && renderLeaderboard()}
-                {currentView === 'admin' && renderAdminView()}
+                {currentView === 'admin-auth' && renderAdminAuth()}
+                {currentView === 'admin' && currentUser && renderAdminPanel()}
             </div>
         </div>
     );

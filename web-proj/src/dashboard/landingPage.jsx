@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import WeightCal from "../components/WeightCal";
 import { FaBars, FaChevronDown, FaChevronUp, FaSearch } from "react-icons/fa";
 import PDFFrame from "../components/pdfFrame";
-import Quiz from "../components/Quiz";
+// import Quiz from "../components/Quiz";
 import "./landingPage.css";
 import TemperatureConverter from "../components/TemperatureConverter";
 import "./landingPageResponsive.css";

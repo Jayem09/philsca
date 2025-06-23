@@ -12,9 +12,10 @@ function AtmosphericPropertiesCalculator() {
 
   const calculateTemperature = (altitude) => {
     const lapseRate = 6.5; // °C/km
-    const T0 = 15; // °C (temperature at sea level)
+    const T0 = 288.15; // K (temperature at sea level in Kelvin)
     return T0 - (lapseRate * altitude / 1000);
   };
+
 
   const calculateAirDensity = (altitude, temperature) => {
     const P0 = 101325; // Pa (pressure at sea level)
@@ -65,7 +66,7 @@ function AtmosphericPropertiesCalculator() {
     setSpeedOfSound(calculateSpeedOfSound(newAltitude, newTemperature));
     setWindSpeed(calculateWindSpeed(newAltitude));
     setBuildingHeight(calculateBuildingHeight(newAltitude));
-    
+
     // Update aircraft position (scale altitude to fit simulator height)
     const maxSimulatorHeight = 300; // pixels
     const maxAltitude = 2000; // meters
@@ -356,7 +357,7 @@ function AtmosphericPropertiesCalculator() {
                 <div style={valueStyle('#dc2626')}>
                   {temperature.toFixed(2)}
                 </div>
-                <div style={unitTextStyle}>degrees Celsius</div>
+                <div style={unitTextStyle}> Kelvin</div>
               </div>
 
               <div style={createCardStyle('linear-gradient(135deg, #eff6ff, #f0fdfa)')}>
@@ -407,7 +408,7 @@ function AtmosphericPropertiesCalculator() {
             <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '16px' }}>
               Click anywhere in the sky to move the aircraft to that altitude
             </p>
-            
+
             <div style={simulatorStyle} onClick={handleSimulatorClick}>
               {/* Buildings */}
               <div style={buildingStyle(20, 5, '#8B4513')}></div>
@@ -427,14 +428,14 @@ function AtmosphericPropertiesCalculator() {
               <div style={altitudeIndicatorStyle}>
                 {altitude.toFixed(0)}m
               </div>
-              
+
               <div style={windIndicatorStyle}>
                 Wind: {windSpeed.toFixed(1)} m/s
               </div>
 
               <div style={buildingInfoStyle}>
-                {buildingHeight.count > 0 ? 
-                  `${buildingHeight.count}x ${buildingHeight.type} tall` : 
+                {buildingHeight.count > 0 ?
+                  `${buildingHeight.count}x ${buildingHeight.type} tall` :
                   buildingHeight.type
                 }
               </div>
@@ -449,8 +450,8 @@ function AtmosphericPropertiesCalculator() {
         <div style={infoBoxStyle}>
           <h4 style={infoTitleStyle}>About the Flight Simulator</h4>
           <p style={infoTextStyle}>
-            This interactive simulator shows how atmospheric conditions change with altitude. 
-            The wind speed calculation uses a simplified model where wind generally increases with height due to reduced ground friction. 
+            This interactive simulator shows how atmospheric conditions change with altitude.
+            The wind speed calculation uses a simplified model where wind generally increases with height due to reduced ground friction.
             Building height comparisons help visualize altitude in familiar terms.
           </p>
         </div>

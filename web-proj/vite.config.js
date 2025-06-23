@@ -16,7 +16,8 @@ export default defineConfig({
         manualChunks: {
           // Split your largest dependencies into separate chunks
           react: ['react', 'react-dom'],
-          vendor: ['lodash', 'axios'], // Add other large dependencies here
+          // Only include packages that are actually installed
+          // vendor: ['lodash', 'axios'], // Remove this line or only include installed packages
         },
       },
     }

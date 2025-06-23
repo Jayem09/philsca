@@ -15,6 +15,7 @@
     "express": "^5.1.0",
     "firebase": "^11.9.1",
     "framer-motion": "^12.6.2",
+    "lodash": "^4.17.21",
     "pdfjs-dist": "^4.10.38",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

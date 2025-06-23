@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -13,13 +13,28 @@ export default defineConfig({
     chunkSizeWarningLimit: 2000, // Set chunk size warning limit to 2000 KB (2MB)
     rollupOptions: {
       output: {
-        manualChunks: {
-          // Split your largest dependencies into separate chunks
-          react: ['react', 'react-dom'],
-          // Only include packages that are actually installed
-          // vendor: ['lodash', 'axios'], // Remove this line or only include installed packages
+        manualChunks: (id) => {
+          // More flexible manual chunking strategy
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'react-vendor';
+            }
+            if (id.includes('lodash')) {
+              return 'lodash-vendor';
+            }
+            if (id.includes('axios')) {
+              return 'axios-vendor';
+            }
+            // Group other node_modules into vendor chunk
+            return 'vendor';
+          }
         },
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
       },
-    }
-  }
-})
+    },
+  },
+  optimizeDeps: {
+    include: ['lodash', 'axios'], // Ensure lodash and axios are pre-bundled
+  },
+});

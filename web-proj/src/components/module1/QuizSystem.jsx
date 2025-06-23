@@ -21,7 +21,7 @@ const initializeFirebase = async () => {
     try {
         // Dynamically import Firebase
         const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js');
-        const { getDatabase, ref, push, remove, onValue, off } = await import('https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js');
+        const { getDatabase, ref, push, remove, onValue, off, set } = await import('https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js');
         const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js');
 
         // Initialize Firebase if not already initialized
@@ -34,7 +34,7 @@ const initializeFirebase = async () => {
         database = getDatabase(firebaseApp);
         auth = getAuth(firebaseApp);
 
-        return { ref, push, remove, onValue, off, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged };
+        return { ref, push, remove, onValue, off, set, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged };
     } catch (error) {
         console.error('Error initializing Firebase:', error);
         throw error;
@@ -62,6 +62,7 @@ function FirebaseQuizSystem() {
     const [quizActive, setQuizActive] = useState(false);
     const [showResults, setShowResults] = useState(false);
     const [connectionStatus, setConnectionStatus] = useState('Connecting...');
+    const [shuffleLoading, setShuffleLoading] = useState(false);
 
     // Real-time synced data
     const [questions, setQuestions] = useState([]);
@@ -76,6 +77,16 @@ function FirebaseQuizSystem() {
         correct: '',
         points: 10
     });
+
+    // Shuffle array function
+    const shuffleArray = (array) => {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    };
 
     // Initialize Firebase and set up listeners
     useEffect(() => {
@@ -273,6 +284,62 @@ function FirebaseQuizSystem() {
             }
         } catch (error) {
             console.error('Logout error:', error);
+        }
+    };
+
+    const shuffleQuestions = async () => {
+        if (!firebaseReady || !firebaseFunctions) {
+            alert('Firebase not connected. Cannot shuffle questions.');
+            return;
+        }
+
+        if (questions.length === 0) {
+            alert('No questions to shuffle!');
+            return;
+        }
+
+        if (!window.confirm(`Are you sure you want to shuffle all ${questions.length} questions? This will immediately change the question order for all students taking the quiz!`)) {
+            return;
+        }
+
+        setShuffleLoading(true);
+
+        try {
+            const { ref, remove, set } = firebaseFunctions;
+
+            // First, get all current questions
+            const questionsToShuffle = [...questions];
+
+            // Remove all questions from Firebase
+            const questionsRef = ref(database, 'questions');
+            await remove(questionsRef);
+
+            // Wait a moment for the removal to propagate
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // Shuffle the questions array
+            const shuffledQuestions = shuffleArray(questionsToShuffle);
+
+            // Add shuffled questions back to Firebase with new IDs
+            const promises = shuffledQuestions.map(async (question, index) => {
+                const { id, ...questionData } = question; // Remove old ID
+                const newQuestionRef = ref(database, `questions/q_${Date.now()}_${index}`);
+                return set(newQuestionRef, {
+                    ...questionData,
+                    shuffledAt: new Date().toLocaleString(),
+                    shuffledBy: currentUser?.email || 'admin'
+                });
+            });
+
+            await Promise.all(promises);
+
+            alert(`Successfully shuffled ${questions.length} questions! All students will see the new order immediately. 🎲`);
+
+        } catch (error) {
+            console.error('Error shuffling questions:', error);
+            alert('Error shuffling questions. Please try again.');
+        } finally {
+            setShuffleLoading(false);
         }
     };
 
@@ -601,6 +668,22 @@ function FirebaseQuizSystem() {
         fontSize: '14px'
     };
 
+    const shuffleButtonStyle = {
+        backgroundColor: '#6f42c1',
+        color: 'white',
+        border: 'none',
+        borderRadius: '8px',
+        padding: '12px 20px',
+        cursor: shuffleLoading ? 'not-allowed' : 'pointer',
+        fontSize: '14px',
+        fontWeight: 'bold',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        transition: 'all 0.3s ease',
+        opacity: shuffleLoading ? 0.7 : 1
+    };
+
     if (loading) {
         return (
             <div style={containerStyle}>
@@ -754,55 +837,52 @@ function FirebaseQuizSystem() {
                     fontSize: '14px',
                     color: '#1976d2'
                 }}>
-                    {firebaseReady ? '🔄 Live Firebase Updates' : '📊 Demo Data'} • {leaderboard.length} participants
+                    {firebaseReady ? '🔄 Live Firebase Updates' : '📊 Demo Data'} • {leaderboard.length} Entries
                 </span>
             </div>
-            <div style={leaderboardStyle}>
-                <div style={{
-                    ...leaderboardRowStyle(0),
-                    backgroundColor: '#007bff',
-                    color: 'white',
-                    fontWeight: 'bold'
-                }}>
-                    <span>Rank</span>
-                    <span>Name</span>
-                    <span>Score</span>
-                    <span>Time</span>
+
+            {leaderboard.length === 0 ? (
+                <div style={questionCardStyle}>
+                    <h3 style={{ color: '#666', marginBottom: '15px' }}>No scores yet!</h3>
+                    <p style={{ color: '#666' }}>Be the first to complete the quiz and make it to the leaderboard!</p>
                 </div>
-                {leaderboard.length === 0 ? (
-                    <div style={{
-                        padding: '40px',
-                        textAlign: 'center',
-                        color: '#666'
-                    }}>
-                        No scores yet. Be the first to complete the quiz!
-                    </div>
-                ) : (
-                    leaderboard.map((entry, index) => (
-                        <div key={`${entry.id}-${entry.timestamp}`} style={leaderboardRowStyle(entry.rank)}>
-                            <span style={{ fontWeight: 'bold' }}>
-                                {entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : `#${entry.rank}`}
-                            </span>
-                            <span>{entry.name}</span>
-                            <span style={{ fontWeight: 'bold' }}>{entry.score}</span>
-                            <span style={{ fontSize: '14px', color: '#666' }}>{entry.time}</span>
+            ) : (
+                <div style={leaderboardStyle}>
+                    {leaderboard.map((entry, index) => (
+                        <div key={entry.id} style={leaderboardRowStyle(entry.rank)}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                <span style={{
+                                    fontSize: '20px',
+                                    fontWeight: 'bold',
+                                    color: entry.rank === 1 ? '#ffc107' : entry.rank === 2 ? '#6c757d' : entry.rank === 3 ? '#dc3545' : '#333'
+                                }}>
+                                    #{entry.rank}
+                                </span>
+                                <div>
+                                    <div style={{ fontWeight: 'bold', fontSize: '16px' }}>{entry.name}</div>
+                                    <div style={{ fontSize: '12px', color: '#666' }}>{entry.time}</div>
+                                </div>
+                            </div>
+                            <div style={{ textAlign: 'right' }}>
+                                <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#007bff' }}>
+                                    {entry.score} pts
+                                </div>
+                                <div style={{ fontSize: '12px', color: '#666' }}>
+                                    {questions.length > 0 ? ((entry.score / (questions.length * 10)) * 100).toFixed(1) : 0}%
+                                </div>
+                            </div>
                         </div>
-                    ))
-                )}
-            </div>
-            <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                <button onClick={() => setCurrentView('quiz')} style={buttonStyle(true)}>
-                    Take Quiz
-                </button>
-            </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 
-    const renderAdminAuth = () => (
+    const renderAuthForm = () => (
         <div style={contentStyle}>
             <div style={authFormStyle}>
-                <h2 style={{ textAlign: 'center', marginBottom: '30px', color: '#333' }}>
-                    Admin {authMode === 'login' ? 'Login' : 'Sign Up'}
+                <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#333' }}>
+                    {authMode === 'login' ? 'Admin Login' : 'Create Admin Account'}
                 </h2>
 
                 {authError && (
@@ -811,7 +891,7 @@ function FirebaseQuizSystem() {
                     </div>
                 )}
 
-                <form onSubmit={handleAuthSubmit}>
+                <div>
                     <input
                         type="email"
                         placeholder="Email"
@@ -832,28 +912,28 @@ function FirebaseQuizSystem() {
                         <input
                             type="password"
                             placeholder="Confirm Password"
-                            value={authForm.confirmPassword} onChange={(e) => setAuthForm({ ...authForm, confirmPassword: e.target.value })}
+                            value={authForm.confirmPassword}
+                            onChange={(e) => setAuthForm({ ...authForm, confirmPassword: e.target.value })}
                             style={inputStyle}
                             required
                         />
                     )}
                     <button
-                        type="submit"
+                        onClick={handleAuthSubmit}
                         disabled={authLoading}
                         style={{
                             ...buttonStyle(true),
                             width: '100%',
-                            marginTop: '20px',
+                            marginTop: '15px',
                             opacity: authLoading ? 0.7 : 1
                         }}
                     >
-                        {authLoading ? 'Processing...' : (authMode === 'login' ? 'Login' : 'Sign Up')}
+                        {authLoading ? 'Please wait...' : (authMode === 'login' ? 'Login' : 'Sign Up')}
                     </button>
-                </form>
+                </div>
 
                 <div style={{ textAlign: 'center', marginTop: '20px' }}>
                     <button
-                        type="button"
                         onClick={() => {
                             setAuthMode(authMode === 'login' ? 'signup' : 'login');
                             setAuthError('');
@@ -864,31 +944,11 @@ function FirebaseQuizSystem() {
                             border: 'none',
                             color: '#007bff',
                             textDecoration: 'underline',
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            fontSize: '14px'
                         }}
                     >
                         {authMode === 'login' ? 'Need an account? Sign up' : 'Already have an account? Login'}
-                    </button>
-                </div>
-
-                <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '14px', color: '#666' }}>
-                    {!firebaseReady && (
-                        <div style={{ color: '#ffc107', marginBottom: '10px' }}>
-                            ⚠️ Firebase not connected - Auth may not work
-                        </div>
-                    )}
-                    <button
-                        type="button"
-                        onClick={() => setCurrentView('quiz')}
-                        style={{
-                            background: 'none',
-                            border: 'none',
-                            color: '#6c757d',
-                            textDecoration: 'underline',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        Back to Quiz
                     </button>
                 </div>
             </div>
@@ -898,10 +958,10 @@ function FirebaseQuizSystem() {
     const renderAdminPanel = () => (
         <div style={contentStyle}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-                <h2 style={{ color: '#333' }}>Admin Panel</h2>
-                <div>
-                    <span style={{ marginRight: '15px', color: '#666' }}>
-                        Welcome, {currentUser?.email}
+                <h2 style={{ color: '#333', margin: 0 }}>Admin Panel</h2>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <span style={{ fontSize: '14px', color: '#666' }}>
+                        {currentUser?.email}
                     </span>
                     <button onClick={handleLogout} style={buttonStyle()}>
                         Logout
@@ -909,22 +969,9 @@ function FirebaseQuizSystem() {
                 </div>
             </div>
 
-            {!firebaseReady && (
-                <div style={{
-                    backgroundColor: '#fff3cd',
-                    border: '1px solid #ffeaa7',
-                    borderRadius: '8px',
-                    padding: '15px',
-                    marginBottom: '20px',
-                    color: '#856404'
-                }}>
-                    <strong>⚠️ Warning:</strong> Firebase connection failed. Admin features may not work properly.
-                </div>
-            )}
-
-            <div style={{ marginBottom: '30px' }}>
-                <h3 style={{ marginBottom: '20px', color: '#333' }}>Add New Question</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', marginBottom: '30px' }}>
                 <div style={questionCardStyle}>
+                    <h3 style={{ marginBottom: '20px', color: '#333' }}>Add New Question</h3>
                     <input
                         type="text"
                         placeholder="Enter question"
@@ -932,7 +979,6 @@ function FirebaseQuizSystem() {
                         onChange={(e) => setNewQuestion({ ...newQuestion, question: e.target.value })}
                         style={inputStyle}
                     />
-
                     {newQuestion.options.map((option, index) => (
                         <input
                             key={index}
@@ -947,15 +993,13 @@ function FirebaseQuizSystem() {
                             style={inputStyle}
                         />
                     ))}
-
                     <input
                         type="text"
-                        placeholder="Correct answer (must match one of the options exactly)"
+                        placeholder="Correct answer (must match one option exactly)"
                         value={newQuestion.correct}
                         onChange={(e) => setNewQuestion({ ...newQuestion, correct: e.target.value })}
                         style={inputStyle}
                     />
-
                     <input
                         type="number"
                         placeholder="Points"
@@ -965,138 +1009,94 @@ function FirebaseQuizSystem() {
                         min="1"
                         max="100"
                     />
-
                     <button onClick={handleAddQuestion} style={buttonStyle(true)}>
                         Add Question
                     </button>
                 </div>
-            </div>
 
-            <div style={{ marginBottom: '30px' }}>
-                <h3 style={{ marginBottom: '20px', color: '#333' }}>
-                    Current Questions ({questions.length})
-                </h3>
-                {questions.length === 0 ? (
-                    <div style={questionCardStyle}>
-                        <p style={{ color: '#666', textAlign: 'center' }}>
-                            No questions added yet. Add your first question above!
-                        </p>
-                    </div>
-                ) : (
-                    questions.map((question, index) => (
-                        <div key={question.id} style={{
-                            ...questionCardStyle,
-                            border: '1px solid #e9ecef'
-                        }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                <div style={{ flex: 1 }}>
-                                    <h4 style={{ marginBottom: '15px', color: '#333' }}>
-                                        Question {index + 1}: {question.question}
-                                    </h4>
-                                    <div style={{ marginBottom: '10px' }}>
-                                        <strong>Options:</strong>
-                                        <ul style={{ marginLeft: '20px', marginTop: '5px' }}>
-                                            {question.options.map((option, optIndex) => (
-                                                <li key={optIndex} style={{
-                                                    color: option === question.correct ? '#28a745' : '#333',
-                                                    fontWeight: option === question.correct ? 'bold' : 'normal'
-                                                }}>
-                                                    {option} {option === question.correct && '✓'}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                    <div style={{ fontSize: '14px', color: '#666' }}>
-                                        <strong>Points:</strong> {question.points} |
-                                        <strong> Correct:</strong> {question.correct}
-                                    </div>
-                                    {question.createdBy && (
-                                        <div style={{ fontSize: '12px', color: '#999', marginTop: '5px' }}>
-                                            Created by: {question.createdBy}
-                                        </div>
-                                    )}
-                                </div>
-                                <button
-                                    onClick={() => handleDeleteQuestion(question.id)}
-                                    style={{
-                                        backgroundColor: '#dc3545',
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '6px',
-                                        padding: '8px 12px',
-                                        cursor: 'pointer',
-                                        fontSize: '12px',
-                                        marginLeft: '15px'
-                                    }}
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    ))
-                )}
-            </div>
-
-            <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                    <h3 style={{ color: '#333' }}>
-                        Leaderboard Management ({leaderboard.length} entries)
-                    </h3>
-                    {leaderboard.length > 0 && (
+                <div style={questionCardStyle}>
+                    <h3 style={{ marginBottom: '20px', color: '#333' }}>Quick Actions</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                        <button
+                            onClick={shuffleQuestions}
+                            disabled={shuffleLoading}
+                            style={shuffleButtonStyle}
+                        >
+                            {shuffleLoading ? (
+                                <>
+                                    <span>🔄</span>
+                                    Shuffling...
+                                </>
+                            ) : (
+                                <>
+                                    <span>🎲</span>
+                                    Shuffle Questions
+                                </>
+                            )}
+                        </button>
                         <button
                             onClick={clearLeaderboard}
                             style={{
-                                backgroundColor: '#dc3545',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '6px',
-                                padding: '10px 15px',
-                                cursor: 'pointer',
-                                fontSize: '14px'
+                                ...buttonStyle(),
+                                backgroundColor: '#dc3545'
                             }}
                         >
-                            Clear All Scores
+                            🗑️ Clear Leaderboard
                         </button>
-                    )}
-                </div>
-
-                <div style={leaderboardStyle}>
-                    <div style={{
-                        ...leaderboardRowStyle(0),
-                        backgroundColor: '#007bff',
-                        color: 'white',
-                        fontWeight: 'bold'
-                    }}>
-                        <span>Rank</span>
-                        <span>Name</span>
-                        <span>Score</span>
-                        <span>Time</span>
-                    </div>
-                    {leaderboard.length === 0 ? (
-                        <div style={{
-                            padding: '40px',
-                            textAlign: 'center',
-                            color: '#666'
-                        }}>
-                            No quiz attempts yet. Scores will appear here automatically!
+                        <div style={{ fontSize: '14px', color: '#666', marginTop: '10px' }}>
+                            <strong>Questions:</strong> {questions.length}<br />
+                            <strong>Leaderboard:</strong> {leaderboard.length} entries<br />
+                            <strong>Status:</strong> {connectionStatus}
                         </div>
-                    ) : (
-                        leaderboard.slice(0, 10).map((entry, index) => (
-                            <div key={`admin-${entry.id}-${entry.timestamp}`} style={leaderboardRowStyle(entry.rank)}>
-                                <span style={{ fontWeight: 'bold' }}>
-                                    {entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : `#${entry.rank}`}
-                                </span>
-                                <span>{entry.name}</span>
-                                <span style={{ fontWeight: 'bold' }}>{entry.score}</span>
-                                <span style={{ fontSize: '14px', color: '#666' }}>{entry.time}</span>
-                            </div>
-                        ))
-                    )}
+                    </div>
                 </div>
+            </div>
 
-                {leaderboard.length > 10 && (
-                    <div style={{ textAlign: 'center', marginTop: '15px', color: '#666', fontSize: '14px' }}>
-                        Showing top 10 entries. Total: {leaderboard.length} participants.
+            <div style={questionCardStyle}>
+                <h3 style={{ marginBottom: '20px', color: '#333' }}>Manage Questions</h3>
+                {questions.length === 0 ? (
+                    <p style={{ color: '#666', textAlign: 'center' }}>No questions yet. Add some above!</p>
+                ) : (
+                    <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                        {questions.map((question, index) => (
+                            <div key={question.id} style={{
+                                border: '1px solid #e9ecef',
+                                borderRadius: '8px',
+                                padding: '15px',
+                                marginBottom: '15px',
+                                backgroundColor: 'white'
+                            }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                    <div style={{ flex: 1 }}>
+                                        <h4 style={{ margin: '0 0 10px 0', color: '#333' }}>
+                                            Question {index + 1}
+                                        </h4>
+                                        <p style={{ margin: '0 0 10px 0', fontSize: '14px' }}>
+                                            {question.question}
+                                        </p>
+                                        <div style={{ fontSize: '12px', color: '#666' }}>
+                                            <strong>Options:</strong> {question.options.join(', ')}<br />
+                                            <strong>Correct:</strong> {question.correct}<br />
+                                            <strong>Points:</strong> {question.points}
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => handleDeleteQuestion(question.id)}
+                                        style={{
+                                            backgroundColor: '#dc3545',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            padding: '8px 12px',
+                                            cursor: 'pointer',
+                                            fontSize: '12px'
+                                        }}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 )}
             </div>
@@ -1111,8 +1111,8 @@ function FirebaseQuizSystem() {
                 </div>
 
                 <div style={headerStyle}>
-                    <h1 style={titleStyle}>🧠 Real-Time Quiz System</h1>
-                    <p>Multi-device synchronized learning platform with Firebase</p>
+                    <h1 style={titleStyle}>Real-Time Quiz System</h1>
+                    <p>Multi-device synchronized learning platform</p>
                 </div>
 
                 <div style={navStyle}>
@@ -1120,31 +1120,25 @@ function FirebaseQuizSystem() {
                         onClick={() => setCurrentView('quiz')}
                         style={buttonStyle(currentView === 'quiz')}
                     >
-                        📝 Take Quiz
+                        Quiz
                     </button>
                     <button
                         onClick={() => setCurrentView('leaderboard')}
                         style={buttonStyle(currentView === 'leaderboard')}
                     >
-                        🏆 Leaderboard
+                        Leaderboard
                     </button>
                     <button
-                        onClick={() => {
-                            if (currentUser) {
-                                setCurrentView('admin');
-                            } else {
-                                setCurrentView('admin-auth');
-                            }
-                        }}
-                        style={buttonStyle(currentView === 'admin' || currentView === 'admin-auth')}
+                        onClick={() => setCurrentView(currentUser ? 'admin' : 'auth')}
+                        style={buttonStyle(currentView === 'admin' || currentView === 'auth')}
                     >
-                        ⚙️ Admin {currentUser ? 'Panel' : 'Login'}
+                        {currentUser ? 'Admin Panel' : 'Admin Login'}
                     </button>
                 </div>
 
                 {currentView === 'quiz' && renderQuizView()}
                 {currentView === 'leaderboard' && renderLeaderboard()}
-                {currentView === 'admin-auth' && renderAdminAuth()}
+                {currentView === 'auth' && renderAuthForm()}
                 {currentView === 'admin' && currentUser && renderAdminPanel()}
             </div>
         </div>

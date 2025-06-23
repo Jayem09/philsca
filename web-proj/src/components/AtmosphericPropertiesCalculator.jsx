@@ -16,7 +16,6 @@ function AtmosphericPropertiesCalculator() {
     return T0 - (lapseRate * altitude / 1000);
   };
 
-
   const calculateAirDensity = (altitude, temperature) => {
     const P0 = 101325; // Pa (pressure at sea level)
     const R = 287.05; // J/kg·K (gas constant)
@@ -42,7 +41,6 @@ function AtmosphericPropertiesCalculator() {
   };
 
   const calculateWindSpeed = (altitude) => {
-    // Simplified wind speed model based on altitude
     const baseWind = 5; // m/s at ground level
     const windGradient = 0.003; // increase per meter
     const gustFactor = Math.sin(altitude * 0.001) * 2; // some variation
@@ -67,9 +65,8 @@ function AtmosphericPropertiesCalculator() {
     setWindSpeed(calculateWindSpeed(newAltitude));
     setBuildingHeight(calculateBuildingHeight(newAltitude));
 
-    // Update aircraft position (scale altitude to fit simulator height)
-    const maxSimulatorHeight = 300; // pixels
-    const maxAltitude = 2000; // meters
+    const maxSimulatorHeight = 300;
+    const maxAltitude = 2000;
     setAircraftPosition(Math.min((newAltitude / maxAltitude) * maxSimulatorHeight, maxSimulatorHeight));
   };
 
@@ -82,358 +79,537 @@ function AtmosphericPropertiesCalculator() {
   const handleSimulatorClick = (event) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const clickY = event.clientY - rect.top;
-    const simulatorHeight = 300;
-    const relativeY = simulatorHeight - clickY; // Invert Y axis
+    const simulatorHeight = rect.height;
+    const relativeY = simulatorHeight - clickY;
     const newAltitude = Math.max(0, (relativeY / simulatorHeight) * 2000);
     setAltitude(Math.round(newAltitude));
     updateCalculations(newAltitude);
   };
 
-  // Initialize calculations on mount
   useEffect(() => {
     updateCalculations(0);
   }, []);
 
-  const containerStyle = {
-    minHeight: '100vh',
-    background: 'linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 50%, #f3e8ff 100%)',
-    padding: '20px',
-    fontFamily: 'Arial, sans-serif'
-  };
-
-  const cardStyle = {
-    maxWidth: '1200px',
-    margin: '0 auto',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: '20px',
-    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
-    padding: '40px',
-    backdropFilter: 'blur(10px)'
-  };
-
-  const titleStyle = {
-    textAlign: 'center',
-    fontSize: '2.5rem',
-    fontWeight: 'bold',
-    background: 'linear-gradient(135deg, #2563eb, #7c3aed)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    marginBottom: '10px'
-  };
-
-  const subtitleStyle = {
-    textAlign: 'center',
-    color: '#6b7280',
-    fontSize: '1.1rem',
-    marginBottom: '40px'
-  };
-
-  const mainGridStyle = {
-    display: 'grid',
-    gridTemplateColumns: '1fr 400px',
-    gap: '40px',
-    marginBottom: '40px'
-  };
-
-  const inputContainerStyle = {
-    marginBottom: '30px'
-  };
-
-  const labelStyle = {
-    display: 'block',
-    fontSize: '14px',
-    fontWeight: '600',
-    color: '#374151',
-    marginBottom: '12px'
-  };
-
-  const inputWrapperStyle = {
-    position: 'relative'
-  };
-
-  const inputStyle = {
-    width: '100%',
-    padding: '16px 60px 16px 24px',
-    fontSize: '18px',
-    border: '2px solid #e5e7eb',
-    borderRadius: '12px',
-    outline: 'none',
-    transition: 'all 0.2s',
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    boxSizing: 'border-box',
-    color: '#1f2937'
-  };
-
-  const unitStyle = {
-    position: 'absolute',
-    right: '16px',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    color: '#9ca3af',
-    fontWeight: '500'
-  };
-
-  const gridStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-    gap: '20px'
-  };
-
-  const simulatorStyle = {
-    position: 'relative',
-    width: '100%',
-    height: '300px',
-    background: 'linear-gradient(to bottom, #87CEEB 0%, #98D8E8 50%, #90EE90 100%)',
-    borderRadius: '16px',
-    border: '2px solid #e5e7eb',
-    overflow: 'hidden',
-    cursor: 'pointer',
-    boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.1)'
-  };
-
-  const buildingStyle = (height, left, color) => ({
-    position: 'absolute',
-    bottom: '0',
-    left: `${left}%`,
-    width: '40px',
-    height: `${height}px`,
-    backgroundColor: color,
-    borderRadius: '2px 2px 0 0',
-    border: '1px solid rgba(0,0,0,0.2)'
-  });
-
-  const aircraftStyle = {
-    position: 'absolute',
-    bottom: `${aircraftPosition}px`,
-    right: '20px',
-    fontSize: '24px',
-    transition: 'bottom 0.3s ease',
-    filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))'
-  };
-
-  const altitudeIndicatorStyle = {
-    position: 'absolute',
-    right: '10px',
-    top: '10px',
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    padding: '8px 12px',
-    borderRadius: '8px',
-    fontSize: '14px',
-    fontWeight: 'bold',
-    color: '#1f2937'
-  };
-
-  const windIndicatorStyle = {
-    position: 'absolute',
-    left: '10px',
-    top: '10px',
-    backgroundColor: 'rgba(59, 130, 246, 0.9)',
-    color: 'white',
-    padding: '8px 12px',
-    borderRadius: '8px',
-    fontSize: '14px',
-    fontWeight: 'bold'
-  };
-
-  const buildingInfoStyle = {
-    position: 'absolute',
-    left: '10px',
-    bottom: '10px',
-    backgroundColor: 'rgba(16, 185, 129, 0.9)',
-    color: 'white',
-    padding: '8px 12px',
-    borderRadius: '8px',
-    fontSize: '12px',
-    fontWeight: 'bold',
-    maxWidth: '200px'
-  };
-
-  const createCardStyle = (gradient) => ({
-    background: gradient,
-    padding: '20px',
-    borderRadius: '16px',
-    border: '1px solid rgba(255, 255, 255, 0.2)'
-  });
-
-  const cardHeaderStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '12px'
-  };
-
-  const dotStyle = (color) => ({
-    width: '12px',
-    height: '12px',
-    backgroundColor: color,
-    borderRadius: '50%',
-    marginRight: '12px'
-  });
-
-  const cardTitleStyle = {
-    fontSize: '16px',
-    fontWeight: '600',
-    color: '#1f2937'
-  };
-
-  const valueStyle = (color) => ({
-    fontSize: '1.8rem',
-    fontWeight: 'bold',
-    color: color,
-    marginBottom: '4px'
-  });
-
-  const unitTextStyle = {
-    fontSize: '12px',
-    color: '#6b7280'
-  };
-
-  const subValueStyle = {
-    fontSize: '11px',
-    color: '#9ca3af',
-    marginTop: '4px'
-  };
-
-  const infoBoxStyle = {
-    padding: '16px',
-    backgroundColor: '#f9fafb',
-    borderRadius: '12px',
-    border: '1px solid #e5e7eb',
-    marginTop: '30px'
-  };
-
-  const infoTitleStyle = {
-    fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: '8px'
-  };
-
-  const infoTextStyle = {
-    fontSize: '14px',
-    color: '#6b7280',
-    lineHeight: '1.5'
-  };
-
   return (
-    <div style={containerStyle}>
-      <div style={cardStyle}>
-        <div>
-          <h1 style={titleStyle}>
+    <div className="app-container">
+      <style jsx>{`
+        .app-container {
+          min-height: 100vh;
+          background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 50%, #f3e8ff 100%);
+          padding: 1rem;
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .main-card {
+          max-width: 1400px;
+          margin: 0 auto;
+          background: rgba(255, 255, 255, 0.95);
+          border-radius: 20px;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+          padding: 1.5rem;
+          backdrop-filter: blur(10px);
+        }
+
+        .header {
+          text-align: center;
+          margin-bottom: 2rem;
+        }
+
+        .title {
+          font-size: clamp(1.8rem, 5vw, 2.5rem);
+          font-weight: bold;
+          background: linear-gradient(135deg, #2563eb, #7c3aed);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          margin-bottom: 0.5rem;
+          line-height: 1.2;
+        }
+
+        .subtitle {
+          color: #6b7280;
+          font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+          margin-bottom: 0;
+        }
+
+        .main-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 2rem;
+          margin-bottom: 2rem;
+        }
+
+        .input-section {
+          order: 2;
+        }
+
+        .simulator-section {
+          order: 1;
+        }
+
+        .input-container {
+          margin-bottom: 1.5rem;
+        }
+
+        .input-label {
+          display: block;
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: #374151;
+          margin-bottom: 0.5rem;
+        }
+
+        .input-wrapper {
+          position: relative;
+        }
+
+        .altitude-input {
+          width: 100%;
+          padding: 1rem 3rem 1rem 1rem;
+          font-size: 1.125rem;
+          border: 2px solid #e5e7eb;
+          border-radius: 12px;
+          outline: none;
+          transition: border-color 0.2s;
+          background: rgba(255, 255, 255, 0.8);
+          box-sizing: border-box;
+          color: #1f2937;
+        }
+
+        .altitude-input:focus {
+          border-color: #3b82f6;
+        }
+
+        .input-unit {
+          position: absolute;
+          right: 1rem;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #9ca3af;
+          font-weight: 500;
+        }
+
+        .range-text {
+          margin-top: 0.5rem;
+          font-size: 0.875rem;
+          color: #6b7280;
+        }
+
+        .metrics-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .metric-card {
+          padding: 1.25rem;
+          border-radius: 16px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          min-height: 120px;
+        }
+
+        .metric-card.temperature {
+          background: linear-gradient(135deg, #fef2f2, #fef7e0);
+        }
+
+        .metric-card.density {
+          background: linear-gradient(135deg, #eff6ff, #f0fdfa);
+        }
+
+        .metric-card.pressure {
+          background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+        }
+
+        .metric-card.sound {
+          background: linear-gradient(135deg, #faf5ff, #fdf2f8);
+        }
+
+        .metric-header {
+          display: flex;
+          align-items: center;
+          margin-bottom: 0.75rem;
+        }
+
+        .metric-dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          margin-right: 0.75rem;
+          flex-shrink: 0;
+        }
+
+        .metric-dot.red { background-color: #ef4444; }
+        .metric-dot.blue { background-color: #3b82f6; }
+        .metric-dot.green { background-color: #10b981; }
+        .metric-dot.purple { background-color: #8b5cf6; }
+
+        .metric-title {
+          font-size: 1rem;
+          font-weight: 600;
+          color: #1f2937;
+          line-height: 1.2;
+        }
+
+        .metric-value {
+          font-size: clamp(1.25rem, 4vw, 1.75rem);
+          font-weight: bold;
+          margin-bottom: 0.25rem;
+          line-height: 1.1;
+        }
+
+        .metric-value.red { color: #dc2626; }
+        .metric-value.blue { color: #2563eb; }
+        .metric-value.green { color: #059669; }
+        .metric-value.purple { color: #7c3aed; }
+
+        .metric-unit {
+          font-size: 0.75rem;
+          color: #6b7280;
+        }
+
+        .metric-sub {
+          font-size: 0.6875rem;
+          color: #9ca3af;
+          margin-top: 0.25rem;
+          line-height: 1.2;
+        }
+
+        .simulator-title {
+          font-size: clamp(1.125rem, 3vw, 1.25rem);
+          font-weight: bold;
+          margin-bottom: 0.75rem;
+          color: #1f2937;
+        }
+
+        .simulator-desc {
+          font-size: 0.875rem;
+          color: #6b7280;
+          margin-bottom: 1rem;
+          line-height: 1.4;
+        }
+
+        .simulator {
+          position: relative;
+          width: 100%;
+          height: 250px;
+          background: linear-gradient(to bottom, #87CEEB 0%, #98D8E8 50%, #90EE90 100%);
+          border-radius: 16px;
+          border: 2px solid #e5e7eb;
+          overflow: hidden;
+          cursor: pointer;
+          box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+          touch-action: manipulation;
+        }
+
+        .building {
+          position: absolute;
+          bottom: 0;
+          border-radius: 2px 2px 0 0;
+          border: 1px solid rgba(0,0,0,0.2);
+        }
+
+        .aircraft {
+          position: absolute;
+          right: 15px;
+          font-size: 20px;
+          transition: bottom 0.3s ease;
+          filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .altitude-indicator {
+          position: absolute;
+          right: 8px;
+          top: 8px;
+          background: rgba(255,255,255,0.95);
+          padding: 0.5rem;
+          border-radius: 8px;
+          font-size: 0.75rem;
+          font-weight: bold;
+          color: #1f2937;
+        }
+
+        .wind-indicator {
+          position: absolute;
+          left: 8px;
+          top: 8px;
+          background: rgba(59, 130, 246, 0.9);
+          color: white;
+          padding: 0.5rem;
+          border-radius: 8px;
+          font-size: 0.75rem;
+          font-weight: bold;
+        }
+
+        .building-info {
+          position: absolute;
+          left: 8px;
+          bottom: 8px;
+          background: rgba(16, 185, 129, 0.9);
+          color: white;
+          padding: 0.5rem;
+          border-radius: 8px;
+          font-size: 0.6875rem;
+          font-weight: bold;
+          max-width: 160px;
+          line-height: 1.2;
+        }
+
+        .tip {
+          margin-top: 1rem;
+          font-size: 0.75rem;
+          color: #6b7280;
+          text-align: center;
+          line-height: 1.3;
+        }
+
+        .info-box {
+          padding: 1rem;
+          background: #f9fafb;
+          border-radius: 12px;
+          border: 1px solid #e5e7eb;
+          margin-top: 2rem;
+        }
+
+        .info-title {
+          font-weight: 600;
+          color: #1f2937;
+          margin-bottom: 0.5rem;
+          font-size: 1rem;
+        }
+
+        .info-text {
+          font-size: 0.875rem;
+          color: #6b7280;
+          line-height: 1.5;
+          margin: 0;
+        }
+
+        /* Tablet styles */
+        @media (min-width: 640px) {
+          .main-card {
+            padding: 2rem;
+          }
+
+          .metrics-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+          }
+
+          .simulator {
+            height: 300px;
+          }
+
+          .aircraft {
+            font-size: 24px;
+            right: 20px;
+          }
+
+          .building-info {
+            max-width: 200px;
+          }
+        }
+
+        /* Desktop styles */
+        @media (min-width: 1024px) {
+          .main-card {
+            padding: 2.5rem;
+          }
+
+          .main-grid {
+            grid-template-columns: 1fr 400px;
+            gap: 2.5rem;
+          }
+
+          .input-section {
+            order: 1;
+          }
+
+          .simulator-section {
+            order: 2;
+          }
+
+          .metrics-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+
+          .simulator {
+            height: 350px;
+          }
+        }
+
+        /* Large desktop styles */
+        @media (min-width: 1200px) {
+          .metrics-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+          }
+        }
+      `}</style>
+
+      <div className="main-card">
+        <div className="header">
+          <h1 className="title">
             Atmospheric Properties Calculator
           </h1>
-          <p style={subtitleStyle}>
+          <p className="subtitle">
             Calculate atmospheric conditions and fly through different altitudes
           </p>
         </div>
 
-        <div style={mainGridStyle}>
-          <div>
-            <div style={inputContainerStyle}>
-              <label style={labelStyle}>
+        <div className="main-grid">
+          <div className="input-section">
+            <div className="input-container">
+              <label className="input-label">
                 Altitude (meters)
               </label>
-              <div style={inputWrapperStyle}>
+              <div className="input-wrapper">
                 <input
                   type="number"
                   value={altitude}
                   onChange={handleAltitudeChange}
                   placeholder="Enter altitude in meters"
-                  style={inputStyle}
-                  onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-                  onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                  className="altitude-input"
                 />
-                <div style={unitStyle}>m</div>
+                <div className="input-unit">m</div>
               </div>
-              <div style={{ marginTop: '8px', fontSize: '14px', color: '#6b7280' }}>
+              <div className="range-text">
                 Range: 0 - 20,000 meters (troposphere)
               </div>
             </div>
 
-            <div style={gridStyle}>
-              <div style={createCardStyle('linear-gradient(135deg, #fef2f2, #fef7e0)')}>
-                <div style={cardHeaderStyle}>
-                  <div style={dotStyle('#ef4444')}></div>
-                  <h3 style={cardTitleStyle}>Temperature</h3>
+            <div className="metrics-grid">
+              <div className="metric-card temperature">
+                <div className="metric-header">
+                  <div className="metric-dot red"></div>
+                  <h3 className="metric-title">Temperature</h3>
                 </div>
-                <div style={valueStyle('#dc2626')}>
+                <div className="metric-value red">
                   {temperature.toFixed(2)}
                 </div>
-                <div style={unitTextStyle}> Kelvin</div>
+                <div className="metric-unit">Kelvin</div>
               </div>
 
-              <div style={createCardStyle('linear-gradient(135deg, #eff6ff, #f0fdfa)')}>
-                <div style={cardHeaderStyle}>
-                  <div style={dotStyle('#3b82f6')}></div>
-                  <h3 style={cardTitleStyle}>Air Density</h3>
+              <div className="metric-card density">
+                <div className="metric-header">
+                  <div className="metric-dot blue"></div>
+                  <h3 className="metric-title">Air Density</h3>
                 </div>
-                <div style={valueStyle('#2563eb')}>
+                <div className="metric-value blue">
                   {airDensity.toFixed(4)}
                 </div>
-                <div style={unitTextStyle}>kg/m³</div>
+                <div className="metric-unit">kg/m³</div>
               </div>
 
-              <div style={createCardStyle('linear-gradient(135deg, #f0fdf4, #ecfdf5)')}>
-                <div style={cardHeaderStyle}>
-                  <div style={dotStyle('#10b981')}></div>
-                  <h3 style={cardTitleStyle}>Air Pressure</h3>
+              <div className="metric-card pressure">
+                <div className="metric-header">
+                  <div className="metric-dot green"></div>
+                  <h3 className="metric-title">Air Pressure</h3>
                 </div>
-                <div style={valueStyle('#059669')}>
+                <div className="metric-value green">
                   {airPressure.toFixed(0)}
                 </div>
-                <div style={unitTextStyle}>Pascal</div>
-                <div style={subValueStyle}>
+                <div className="metric-unit">Pascal</div>
+                <div className="metric-sub">
                   {(airPressure / 101325 * 100).toFixed(1)}% of sea level
                 </div>
               </div>
 
-              <div style={createCardStyle('linear-gradient(135deg, #faf5ff, #fdf2f8)')}>
-                <div style={cardHeaderStyle}>
-                  <div style={dotStyle('#8b5cf6')}></div>
-                  <h3 style={cardTitleStyle}>Speed of Sound</h3>
+              <div className="metric-card sound">
+                <div className="metric-header">
+                  <div className="metric-dot purple"></div>
+                  <h3 className="metric-title">Speed of Sound</h3>
                 </div>
-                <div style={valueStyle('#7c3aed')}>
+                <div className="metric-value purple">
                   {speedOfSound.toFixed(1)}
                 </div>
-                <div style={unitTextStyle}>m/s</div>
-                <div style={subValueStyle}>
+                <div className="metric-unit">m/s</div>
+                <div className="metric-sub">
                   {(speedOfSound * 3.6).toFixed(1)} km/h
                 </div>
               </div>
             </div>
           </div>
 
-          <div>
-            <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px', color: '#1f2937' }}>
+          <div className="simulator-section">
+            <h3 className="simulator-title">
               Flight Altitude Simulator
             </h3>
-            <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '16px' }}>
+            <p className="simulator-desc">
               Click anywhere in the sky to move the aircraft to that altitude
             </p>
 
-            <div style={simulatorStyle} onClick={handleSimulatorClick}>
+            <div className="simulator" onClick={handleSimulatorClick}>
               {/* Buildings */}
-              <div style={buildingStyle(20, 5, '#8B4513')}></div>
-              <div style={buildingStyle(35, 15, '#A0522D')}></div>
-              <div style={buildingStyle(60, 25, '#696969')}></div>
-              <div style={buildingStyle(45, 35, '#778899')}></div>
-              <div style={buildingStyle(80, 45, '#2F4F4F')}></div>
-              <div style={buildingStyle(25, 55, '#8B4513')}></div>
-              <div style={buildingStyle(100, 65, '#1C1C1C')}></div>
-              <div style={buildingStyle(30, 75, '#A0522D')}></div>
-              <div style={buildingStyle(55, 85, '#696969')}></div>
+              <div className="building" style={{
+                left: '5%',
+                width: '30px',
+                height: '20px',
+                backgroundColor: '#8B4513'
+              }}></div>
+              <div className="building" style={{
+                left: '15%',
+                width: '30px',
+                height: '35px',
+                backgroundColor: '#A0522D'
+              }}></div>
+              <div className="building" style={{
+                left: '25%',
+                width: '30px',
+                height: '60px',
+                backgroundColor: '#696969'
+              }}></div>
+              <div className="building" style={{
+                left: '35%',
+                width: '30px',
+                height: '45px',
+                backgroundColor: '#778899'
+              }}></div>
+              <div className="building" style={{
+                left: '45%',
+                width: '30px',
+                height: '80px',
+                backgroundColor: '#2F4F4F'
+              }}></div>
+              <div className="building" style={{
+                left: '55%',
+                width: '30px',
+                height: '25px',
+                backgroundColor: '#8B4513'
+              }}></div>
+              <div className="building" style={{
+                left: '65%',
+                width: '30px',
+                height: '100px',
+                backgroundColor: '#1C1C1C'
+              }}></div>
+              <div className="building" style={{
+                left: '75%',
+                width: '30px',
+                height: '30px',
+                backgroundColor: '#A0522D'
+              }}></div>
+              <div className="building" style={{
+                left: '85%',
+                width: '30px',
+                height: '55px',
+                backgroundColor: '#696969'
+              }}></div>
 
               {/* Aircraft */}
-              <div style={aircraftStyle}>✈️</div>
+              <div className="aircraft" style={{ bottom: `${aircraftPosition}px` }}>
+                ✈️
+              </div>
 
               {/* Indicators */}
-              <div style={altitudeIndicatorStyle}>
+              <div className="altitude-indicator">
                 {altitude.toFixed(0)}m
               </div>
 
-              <div style={windIndicatorStyle}>
+              <div className="wind-indicator">
                 Wind: {windSpeed.toFixed(1)} m/s
               </div>
 
-              <div style={buildingInfoStyle}>
+              <div className="building-info">
                 {buildingHeight.count > 0 ?
                   `${buildingHeight.count}x ${buildingHeight.type} tall` :
                   buildingHeight.type
@@ -441,15 +617,15 @@ function AtmosphericPropertiesCalculator() {
               </div>
             </div>
 
-            <div style={{ marginTop: '16px', fontSize: '12px', color: '#6b7280', textAlign: 'center' }}>
+            <div className="tip">
               💡 Tip: Watch how wind speed increases with altitude!
             </div>
           </div>
         </div>
 
-        <div style={infoBoxStyle}>
-          <h4 style={infoTitleStyle}>About the Flight Simulator</h4>
-          <p style={infoTextStyle}>
+        <div className="info-box">
+          <h4 className="info-title">About the Flight Simulator</h4>
+          <p className="info-text">
             This interactive simulator shows how atmospheric conditions change with altitude.
             The wind speed calculation uses a simplified model where wind generally increases with height due to reduced ground friction.
             Building height comparisons help visualize altitude in familiar terms.

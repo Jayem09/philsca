@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaBars, FaSearch, FaTimes, FaHome, FaCalculator, FaThermometerHalf, FaChevronDown } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import "bootstrap/js/dist/offcanvas"; // Import Offcanvas JavaScript
 
 // Weight Converter Component
 const WeightCal = ({ onClose }) => (
@@ -10,16 +10,18 @@ const WeightCal = ({ onClose }) => (
     <div className="card shadow-lg" style={{ maxWidth: '500px', margin: '0 auto' }}>
       <div className="card-header d-flex justify-content-between align-items-center bg-primary text-white">
         <h4 className="mb-0">Weight Converter</h4>
-        <button onClick={onClose} className="btn btn-outline-light btn-sm">
+        <button onClick={onClose} className="btn btn-outline-light btn-sm" aria-label="Close Weight Converter">
           <FaTimes />
         </button>
       </div>
       <div className="card-body">
         <div className="mb-3">
-          <input type="number" placeholder="Enter weight" className="form-control" />
+          <label htmlFor="weightInput" className="form-label visually-hidden">Enter weight</label>
+          <input type="number" id="weightInput" placeholder="Enter weight" className="form-control" aria-label="Weight input" />
         </div>
         <div className="mb-3">
-          <select className="form-select">
+          <label htmlFor="unitSelect" className="form-label visually-hidden">Select unit</label>
+          <select id="unitSelect" className="form-select" aria-label="Weight unit selection">
             <option>Kilograms</option>
             <option>Pounds</option>
             <option>Grams</option>
@@ -39,16 +41,18 @@ const TemperatureConverter = ({ onClose }) => (
     <div className="card shadow-lg" style={{ maxWidth: '500px', margin: '0 auto' }}>
       <div className="card-header d-flex justify-content-between align-items-center bg-danger text-white">
         <h4 className="mb-0">Temperature Converter</h4>
-        <button onClick={onClose} className="btn btn-outline-light btn-sm">
+        <button onClick={onClose} className="btn btn-outline-light btn-sm" aria-label="Close Temperature Converter">
           <FaTimes />
         </button>
       </div>
       <div className="card-body">
         <div className="mb-3">
-          <input type="number" placeholder="Enter temperature" className="form-control" />
+          <label htmlFor="tempInput" className="form-label visually-hidden">Enter temperature</label>
+          <input type="number" id="tempInput" placeholder="Enter temperature" className="form-control" aria-label="Temperature input" />
         </div>
         <div className="mb-3">
-          <select className="form-select">
+          <label htmlFor="tempUnitSelect" className="form-label visually-hidden">Select unit</label>
+          <select id="tempUnitSelect" className="form-select" aria-label="Temperature unit selection">
             <option>Celsius</option>
             <option>Fahrenheit</option>
             <option>Kelvin</option>
@@ -68,10 +72,13 @@ const PDFViewer = ({ file, onClose }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Simulate network delay for PDF loading
     const timer = setTimeout(() => {
       setIsLoading(false);
+      // In a real app, you'd verify PDF loading success here
     }, 1500);
-    return () => clearTimeout(timer);
+
+    return () => clearTimeout(timer); // Cleanup on unmount
   }, [file]);
 
   const spinnerStyle = {
@@ -84,6 +91,7 @@ const PDFViewer = ({ file, onClose }) => {
       <div className="container mt-4">
         <div className="alert alert-danger text-center">
           <h4>Error loading PDF</h4>
+          <p>{error.message}</p>
           <button onClick={onClose} className="btn btn-danger mt-2">Close</button>
         </div>
       </div>
@@ -95,22 +103,24 @@ const PDFViewer = ({ file, onClose }) => {
       <div className="card shadow-lg">
         <div className="card-header d-flex justify-content-between align-items-center bg-dark text-white">
           <h5 className="mb-0">PDF Viewer</h5>
-          <button onClick={onClose} className="btn btn-outline-light btn-sm">
+          <button onClick={onClose} className="btn btn-outline-light btn-sm" aria-label="Close PDF Viewer">
             <FaTimes />
           </button>
         </div>
-        <div className="card-body p-0" style={{ height: '80vh' }}>
+        <div className="card-body p-0" style={{ height: '80vh', position: 'relative' }}>
           {isLoading ? (
-            <div className="d-flex justify-content-center align-items-center h-100">
+            <div className="d-flex justify-content-center align-items-center h-100 position-absolute w-100">
               <div className="spinner-border text-primary" style={spinnerStyle} role="status">
                 <span className="visually-hidden">Loading...</span>
               </div>
+              <p className="ms-3 text-muted">Loading PDF...</p>
             </div>
           ) : (
             <iframe
               src={file}
               style={{ width: '100%', height: '100%', border: 'none' }}
               title="PDF Viewer"
+              onError={() => setError(new Error("Failed to load PDF iframe."))} // Basic error handling for iframe
             />
           )}
         </div>
@@ -163,7 +173,7 @@ const menuConfig = [
   }
 ];
 
-// Custom styles
+// Custom styles (kept inline for simplicity, consider CSS modules for larger projects)
 const styles = {
   landingPage: {
     minHeight: '100vh',
@@ -175,12 +185,6 @@ const styles = {
     backdropFilter: 'blur(10px)',
     borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
     zIndex: 1040
-  },
-  sidebar: {
-    width: '320px',
-    backgroundColor: '#ffffff',
-    boxShadow: '2px 0 10px rgba(0,0,0,0.1)',
-    zIndex: 1050
   },
   sidebarHeader: {
     padding: '1.5rem',
@@ -196,11 +200,18 @@ const styles = {
     transition: 'all 0.3s ease',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    color: '#343a40' // Default text color
   },
   menuItemHover: {
     backgroundColor: '#f8f9fa',
-    transform: 'translateX(5px)'
+    transform: 'translateX(5px)',
+    color: '#007bff' // Highlight color on hover
+  },
+  menuItemActive: {
+    backgroundColor: '#e3f2fd',
+    color: '#007bff',
+    fontWeight: 'bold'
   },
   nestedItem: {
     padding: '0.5rem 1rem',
@@ -216,14 +227,10 @@ const styles = {
     backgroundColor: '#e3f2fd',
     color: '#1976d2'
   },
-  overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    zIndex: 1040
+  nestedItemActive: {
+    backgroundColor: '#cfe2ff', // Lighter blue for active nested item
+    color: '#0a58ca',
+    fontWeight: 'bold'
   },
   mainContent: {
     marginTop: '80px',
@@ -267,17 +274,26 @@ export default function LandingPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [expandedModule, setExpandedModule] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedContent, setSelectedContent] = useState({ type: "home" });
+  const [selectedContent, setSelectedContent] = useState({ type: "home" }); // { type: "home" | "pdf", file: "path" | "weight" | "temperature" }
   const [hoveredItem, setHoveredItem] = useState(null);
 
   const filteredMenuItems = useMemo(() => {
     if (!searchQuery) return menuConfig;
-    return menuConfig.filter(item =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (item.children && item.children.some(child =>
-        child.name.toLowerCase().includes(searchQuery.toLowerCase())
-      ))
-    );
+
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    return menuConfig.filter(item => {
+      // Check if main item name matches
+      if (item.name.toLowerCase().includes(lowerCaseQuery)) {
+        return true;
+      }
+      // Check if any child item name matches
+      if (item.children && item.children.some(child =>
+        child.name.toLowerCase().includes(lowerCaseQuery)
+      )) {
+        return true;
+      }
+      return false;
+    });
   }, [searchQuery]);
 
   const toggleSidebar = useCallback(() => {
@@ -289,25 +305,16 @@ export default function LandingPage() {
   }, []);
 
   const handleMenuItemClick = useCallback((item) => {
-    switch (item.type) {
-      case "home":
-        setSelectedContent({ type: "home" });
-        break;
-      case "weight":
-        setSelectedContent({ type: "weight" });
-        break;
-      case "temperature":
-        setSelectedContent({ type: "temperature" });
-        break;
-      default:
-        break;
-    }
-    setIsOpen(false);
+    setSelectedContent({ type: item.type });
+    // Bootstrap's Offcanvas handles closing, so directly setting isOpen(false) here might conflict.
+    // Instead, rely on data-bs-dismiss="offcanvas" on the close button or programmatically close via BS API.
+    // For now, we'll keep this for direct JS calls if needed.
+    // setIsOpen(false);
   }, []);
 
   const handlePdfClick = useCallback((pdf) => {
     setSelectedContent({ type: "pdf", file: pdf });
-    setIsOpen(false);
+    // setIsOpen(false);
   }, []);
 
   const closeContent = useCallback(() => {
@@ -337,11 +344,12 @@ export default function LandingPage() {
                 Navigate through the sidebar to access different sections.
               </p>
               <div className="row justify-content-center mt-5">
-                <div className="col-md-4">
+                <div className="col-md-4 mb-4 mb-md-0">
                   <div
                     style={styles.featureCard}
-                    onMouseEnter={(e) => e.target.style.transform = 'translateY(-10px)'}
-                    onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-10px)'}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                    onClick={() => setSelectedContent({ type: "weight" })}
                   >
                     <FaCalculator size={48} className="mb-3" />
                     <h4>Conversion Tools</h4>
@@ -351,8 +359,9 @@ export default function LandingPage() {
                 <div className="col-md-4">
                   <div
                     style={styles.featureCard}
-                    onMouseEnter={(e) => e.target.style.transform = 'translateY(-10px)'}
-                    onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-10px)'}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                    onClick={() => setExpandedModule(0)} // Example: Expands Module 1
                   >
                     <div style={{ fontSize: '48px' }} className="mb-3">📚</div>
                     <h4>Learning Modules</h4>
@@ -373,13 +382,17 @@ export default function LandingPage() {
         <div className="container-fluid">
           <button
             className="btn btn-outline-primary me-3"
-            onClick={toggleSidebar}
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasSidebar"
+            aria-controls="offcanvasSidebar"
             aria-label="Toggle sidebar"
+            onClick={() => setIsOpen(true)} // Set isOpen true when sidebar opens via Bootstrap toggle
           >
             <FaBars />
           </button>
 
-          <div style={styles.searchContainer}>
+          <div style={styles.searchContainer} className="d-flex me-auto">
             <FaSearch style={styles.searchIcon} />
             <input
               type="text"
@@ -388,112 +401,133 @@ export default function LandingPage() {
               placeholder="Search modules and topics..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Search modules and topics"
             />
           </div>
 
-          <div style={{ width: '50px' }}></div>
+          {/* Spacer div to balance navbar (optional, adjust as needed) */}
+          <div className="d-none d-lg-block" style={{ width: '50px' }}></div>
         </div>
       </nav>
 
-      {/* Overlay */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={styles.overlay}
-            onClick={toggleSidebar}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Sidebar */}
-      <motion.div
-        className="position-fixed h-100"
-        style={{
-          ...styles.sidebar,
-          left: 0,
-          top: 0,
-          overflowY: 'auto'
-        }}
-        initial={{ x: "-100%" }}
-        animate={{ x: isOpen ? 0 : "-100%" }}
-        transition={{ duration: 0.3 }}
+      {/* Sidebar - Bootstrap Offcanvas */}
+      <div
+        className="offcanvas offcanvas-start"
+        tabIndex="-1"
+        id="offcanvasSidebar"
+        aria-labelledby="offcanvasSidebarLabel"
+        style={{ width: '320px' }} // Apply your custom width
+        onShow={() => setIsOpen(true)} // Keep React state in sync with Bootstrap's
+        onHide={() => setIsOpen(false)} // Keep React state in sync with Bootstrap's
       >
-        <div style={styles.sidebarHeader}>
-          <h3 className="mb-1">Learning Hub</h3>
-          <small>Navigate your learning journey</small>
+        <div className="offcanvas-header" style={styles.sidebarHeader}>
+          <h5 className="offcanvas-title" id="offcanvasSidebarLabel">Learning Hub</h5>
+          <button
+            type="button"
+            className="btn-close text-reset"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close sidebar"
+          ></button>
         </div>
+        <div className="offcanvas-body p-0">
+          <div className="p-3">
+            {filteredMenuItems.map((item, index) => {
+              const isMainActive =
+                selectedContent.type === item.type ||
+                (item.hasChildren && expandedModule === index);
 
-        <div className="p-3">
-          {filteredMenuItems.map((item, index) => (
-            <div key={index}>
-              <div
-                style={{
-                  ...styles.menuItem,
-                  ...(hoveredItem === `main-${index}` ? styles.menuItemHover : {})
-                }}
-                onMouseEnter={() => setHoveredItem(`main-${index}`)}
-                onMouseLeave={() => setHoveredItem(null)}
-                onClick={() => {
-                  if (item.hasChildren) {
-                    toggleModule(index);
-                  } else {
-                    handleMenuItemClick(item);
-                  }
-                }}
-              >
-                <div className="d-flex align-items-center">
-                  {item.icon && <item.icon className="me-2" />}
-                  <span>{item.name}</span>
-                </div>
-                {item.hasChildren && (
-                  <motion.div
-                    animate={{ rotate: expandedModule === index ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
+              return (
+                <div key={index}>
+                  <div
+                    style={{
+                      ...styles.menuItem,
+                      ...(hoveredItem === `main-${index}` ? styles.menuItemHover : {}),
+                      ...(isMainActive ? styles.menuItemActive : {})
+                    }}
+                    onMouseEnter={() => setHoveredItem(`main-${index}`)}
+                    onMouseLeave={() => setHoveredItem(null)}
+                    onClick={() => {
+                      if (item.hasChildren) {
+                        toggleModule(index);
+                      } else {
+                        handleMenuItemClick(item);
+                      }
+                      // Close offcanvas when a menu item is clicked (only for non-parent items)
+                      if (!item.hasChildren) {
+                        const offcanvasElement = document.getElementById('offcanvasSidebar');
+                        if (offcanvasElement) {
+                          const bsOffcanvas = window.bootstrap.Offcanvas.getInstance(offcanvasElement) || new window.bootstrap.Offcanvas(offcanvasElement);
+                          bsOffcanvas.hide();
+                        }
+                      }
+                    }}
+                    aria-expanded={item.hasChildren ? (expandedModule === index ? "true" : "false") : undefined}
                   >
-                    <FaChevronDown />
-                  </motion.div>
-                )}
-              </div>
-
-              <AnimatePresence>
-                {item.hasChildren && expandedModule === index && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    style={{ overflow: 'hidden' }}
-                  >
-                    {item.children.map((child, childIndex) => (
-                      <div
-                        key={childIndex}
-                        style={{
-                          ...styles.nestedItem,
-                          ...(hoveredItem === `child-${index}-${childIndex}` ? styles.nestedItemHover : {})
-                        }}
-                        onMouseEnter={() => setHoveredItem(`child-${index}-${childIndex}`)}
-                        onMouseLeave={() => setHoveredItem(null)}
-                        onClick={() => handlePdfClick(child.pdf)}
+                    <div className="d-flex align-items-center">
+                      {item.icon && <item.icon className="me-2" />}
+                      <span>{item.name}</span>
+                    </div>
+                    {item.hasChildren && (
+                      <motion.div
+                        animate={{ rotate: expandedModule === index ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
                       >
-                        {child.name}
-                      </div>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
+                        <FaChevronDown />
+                      </motion.div>
+                    )}
+                  </div>
+
+                  <AnimatePresence>
+                    {item.hasChildren && expandedModule === index && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                        style={{ overflow: 'hidden' }}
+                      >
+                        {item.children.map((child, childIndex) => {
+                          const isChildActive = selectedContent.type === "pdf" && selectedContent.file === child.pdf;
+                          return (
+                            <div
+                              key={childIndex}
+                              style={{
+                                ...styles.nestedItem,
+                                ...(hoveredItem === `child-${index}-${childIndex}` ? styles.nestedItemHover : {}),
+                                ...(isChildActive ? styles.nestedItemActive : {})
+                              }}
+                              onMouseEnter={() => setHoveredItem(`child-${index}-${childIndex}`)}
+                              onMouseLeave={() => setHoveredItem(null)}
+                              onClick={() => {
+                                handlePdfClick(child.pdf);
+                                // Close offcanvas when a PDF item is clicked
+                                const offcanvasElement = document.getElementById('offcanvasSidebar');
+                                if (offcanvasElement) {
+                                  const bsOffcanvas = window.bootstrap.Offcanvas.getInstance(offcanvasElement) || new window.bootstrap.Offcanvas(offcanvasElement);
+                                  bsOffcanvas.hide();
+                                }
+                              }}
+                              aria-current={isChildActive ? "page" : undefined}
+                            >
+                              {child.name}
+                            </div>
+                          );
+                        })}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Main Content */}
       <div style={styles.mainContent}>
         <AnimatePresence mode="wait">
           <motion.div
-            key={selectedContent.type + (selectedContent.file || '')}
+            key={selectedContent.type + (selectedContent.file || '')} // Key changes based on content type and file
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}

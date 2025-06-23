@@ -689,7 +689,7 @@ function FirebaseQuizSystem() {
             <div style={containerStyle}>
                 <div style={cardStyle}>
                     <div style={headerStyle}>
-                        <h1 style={titleStyle}>Real-Time Quiz System</h1>
+                        <h1 style={titleStyle}>Quiz</h1>
                         <p>Multi-device synchronized learning platform</p>
                     </div>
                     <div style={loadingStyle}>
@@ -711,7 +711,7 @@ function FirebaseQuizSystem() {
         <div style={contentStyle}>
             {!quizActive && !showResults && (
                 <div style={{ textAlign: 'center' }}>
-                    <h2 style={{ marginBottom: '30px', color: '#333' }}>Real-Time Quiz System</h2>
+                    <h2 style={{ marginBottom: '30px', color: '#333' }}>Real-Time Quiz</h2>
                     {questions.length === 0 ? (
                         <div style={questionCardStyle}>
                             <h3 style={{ color: '#dc3545', marginBottom: '20px' }}>Waiting for Questions...</h3>
@@ -729,7 +729,7 @@ function FirebaseQuizSystem() {
                                     ✅ {questions.length} Questions Available
                                 </h3>
                                 <p style={{ color: '#666', fontSize: '14px' }}>
-                                    {firebaseReady ? 'Questions are synchronized in real-time via Firebase' : 'Running with demo questions'}
+                                    {firebaseReady ? 'Questions are synchronized in real-time.' : 'Running with demo questions'}
                                 </p>
                             </div>
                             <input
@@ -827,7 +827,7 @@ function FirebaseQuizSystem() {
     const renderLeaderboard = () => (
         <div style={contentStyle}>
             <h2 style={{ textAlign: 'center', marginBottom: '30px', color: '#333' }}>
-                🏆 Real-Time Leaderboard
+                Leaderboard
             </h2>
             <div style={{ textAlign: 'center', marginBottom: '20px' }}>
                 <span style={{
@@ -1111,7 +1111,7 @@ function FirebaseQuizSystem() {
                 </div>
 
                 <div style={headerStyle}>
-                    <h1 style={titleStyle}>Real-Time Quiz System</h1>
+                    <h1 style={titleStyle}>Quiz</h1>
                     <p>Multi-device synchronized learning platform</p>
                 </div>
 

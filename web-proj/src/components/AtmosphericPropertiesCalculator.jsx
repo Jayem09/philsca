@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import aircraft from '../../public/assets/aircraft.png';
 function AtmosphericPropertiesCalculator() {
   const [altitude, setAltitude] = useState(0);
   const [temperature, setTemperature] = useState(0);
@@ -174,7 +174,7 @@ function AtmosphericPropertiesCalculator() {
           background: rgba(255, 255, 255, 0.8);
           box-sizing: border-box;
           color: #1f2937;
-        }
+        }P
 
         .altitude-input:focus {
           border-color: #3b82f6;
@@ -594,11 +594,12 @@ function AtmosphericPropertiesCalculator() {
                 height: '55px',
                 backgroundColor: '#696969'
               }}></div>
-
               {/* Aircraft */}
               <div className="aircraft" style={{ bottom: `${aircraftPosition}px` }}>
-                ✈️
+                <img src={aircraft} alt="Aircraft" style={{ width: '100px', height: 'auto' }} />
               </div>
+
+
 
               {/* Indicators */}
               <div className="altitude-indicator">
@@ -629,7 +630,7 @@ function AtmosphericPropertiesCalculator() {
             This interactive simulator shows how atmospheric conditions change with altitude.
             The wind speed calculation uses a simplified model where wind generally increases with height due to reduced ground friction.
             Building height comparisons help visualize altitude in familiar terms.
-          </p>
+          </p>x
         </div>
       </div>
     </div>

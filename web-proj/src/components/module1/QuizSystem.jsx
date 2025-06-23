@@ -242,7 +242,7 @@ function FirebaseQuizSystem() {
     };
 
     const handleAdminLogin = () => {
-        if (adminPassword === '') {
+        if (adminPassword === 'admin123') {
             setIsAdmin(true);
             setCurrentView('admin');
             setAdminPassword('');
@@ -700,7 +700,7 @@ function FirebaseQuizSystem() {
                         Login
                     </button>
                     <p style={{ marginTop: '20px', color: '#666', fontSize: '14px' }}>
-                        Demo password: admin123
+
                     </p>
                 </div>
             ) : (

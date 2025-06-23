@@ -26,7 +26,7 @@ const menuItems = [
     children: [
       { name: "Topic 1", pdf: "/pdf/Module 2 (Topic 1).pdf" },
       { name: "Topic 2", pdf: "/pdf/Module 2 (Topic 2).pdf" },
- 
+
     ],
   },
   {

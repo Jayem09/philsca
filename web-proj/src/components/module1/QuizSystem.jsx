@@ -242,7 +242,7 @@ function FirebaseQuizSystem() {
     };
 
     const handleAdminLogin = () => {
-        if (adminPassword === 'admin123') {
+        if (adminPassword === '') {
             setIsAdmin(true);
             setCurrentView('admin');
             setAdminPassword('');

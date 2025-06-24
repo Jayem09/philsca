@@ -212,7 +212,7 @@ function FirebaseQuizSystem() {
         setAuthLoading(true);
 
         if (!firebaseReady || !firebaseFunctions) {
-            setAuthError('Firebase not connected. Please check your connection.');
+            setAuthError('Database not connected. Please check your connection.');
             setAuthLoading(false);
             return;
         }
@@ -289,7 +289,7 @@ function FirebaseQuizSystem() {
 
     const shuffleQuestions = async () => {
         if (!firebaseReady || !firebaseFunctions) {
-            alert('Firebase not connected. Cannot shuffle questions.');
+            alert('Database not connected. Cannot shuffle questions.');
             return;
         }
 
@@ -461,7 +461,7 @@ function FirebaseQuizSystem() {
 
                 alert('Question added successfully! All students will see it immediately.');
             } else {
-                alert('Firebase not connected. Please check your connection.');
+                alert('Databse not connected. Please check your connection.');
             }
         } catch (error) {
             console.error('Error adding question:', error);
@@ -478,7 +478,7 @@ function FirebaseQuizSystem() {
                     await remove(questionRef);
                     alert('Question deleted successfully!');
                 } else {
-                    alert('Firebase not connected. Please check your connection.');
+                    alert('Database not connected. Please check your connection.');
                 }
             } catch (error) {
                 console.error('Error deleting question:', error);
@@ -499,7 +499,7 @@ function FirebaseQuizSystem() {
                     await Promise.all(promises);
                     alert('Leaderboard cleared successfully!');
                 } else {
-                    alert('Firebase not connected. Please check your connection.');
+                    alert('Database not connected. Please check your connection.');
                 }
             } catch (error) {
                 console.error('Error clearing leaderboard:', error);
@@ -693,12 +693,12 @@ function FirebaseQuizSystem() {
                         <p>Multi-device synchronized learning platform</p>
                     </div>
                     <div style={loadingStyle}>
-                        <h3>🔄 Connecting to Firebase...</h3>
+                        <h3>Connecting...</h3>
                         <p>Please wait while we establish connection to the database.</p>
                         {connectionStatus === 'Connection Error' && (
                             <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#f8d7da', borderRadius: '8px', color: '#721c24' }}>
                                 <strong>Connection Failed</strong><br />
-                                Loading demo data instead. Firebase features may not work properly.
+                                Loading demo data instead. Please check your internet connection.
                             </div>
                         )}
                     </div>
@@ -719,7 +719,7 @@ function FirebaseQuizSystem() {
                                 The administrator is preparing questions. They will appear here automatically once added.
                             </p>
                             <div style={{ fontSize: '14px', color: '#666' }}>
-                                🔄 {firebaseReady ? 'Connected to Firebase' : 'Running in demo mode'}
+                                🔄 {firebaseReady ? 'Connected' : 'Running in demo mode'}
                             </div>
                         </div>
                     ) : (
@@ -837,7 +837,7 @@ function FirebaseQuizSystem() {
                     fontSize: '14px',
                     color: '#1976d2'
                 }}>
-                    {firebaseReady ? '🔄 Live Firebase Updates' : '📊 Demo Data'} • {leaderboard.length} Entries
+                    {firebaseReady ? '🔄 Live Updates' : '📊 Demo Data'} • {leaderboard.length} Entries
                 </span>
             </div>
 

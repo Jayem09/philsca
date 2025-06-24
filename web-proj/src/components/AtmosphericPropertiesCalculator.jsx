@@ -630,7 +630,7 @@ function AtmosphericPropertiesCalculator() {
             This interactive simulator shows how atmospheric conditions change with altitude.
             The wind speed calculation uses a simplified model where wind generally increases with height due to reduced ground friction.
             Building height comparisons help visualize altitude in familiar terms.
-          </p>x
+          </p>
         </div>
       </div>
     </div>

@@ -474,7 +474,7 @@ const LearningHub = () => {
             </div>
           </div>
 
-          <div className="flex-1 max-w-md mx-8">
+          <div className="flex-1 max-w-md mx-10">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
               <input
@@ -487,7 +487,7 @@ const LearningHub = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400">
               <Bell size={20} />
             </button>
@@ -497,7 +497,7 @@ const LearningHub = () => {
             <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400">
               <User size={20} />
             </button>
-          </div>
+          </div> */}
         </div>
       </nav>
 

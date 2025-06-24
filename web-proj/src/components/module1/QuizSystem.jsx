@@ -641,7 +641,7 @@ function FirebaseQuizSystem() {
         alignItems: 'center',
         padding: '15px 20px',
         borderBottom: '1px solid #e9ecef',
-        backgroundColor: rank === 1 ? '#fff3cd' : rank === 2 ? '#e2e8f0' : rank === 3 ? '#f8d7da' : 'white'
+        backgroundColor: rank === 1 ? '#fff3cd' : rank === 2 ? '#e2e8f0' : rank === 3 ? '#f8d7da' : 'crimson'
     });
 
     const loadingStyle = {

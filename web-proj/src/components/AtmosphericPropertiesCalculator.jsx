@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import aircraft from '../../public/assets/aircraft.png';
+import aircraft from '../../public//assets/aircraft.png';
 function AtmosphericPropertiesCalculator() {
   const [altitude, setAltitude] = useState(0);
   const [temperature, setTemperature] = useState(0);
@@ -92,7 +92,8 @@ function AtmosphericPropertiesCalculator() {
 
   return (
     <div className="app-container">
-      <style jsx>{`
+      <style jsx="true"
+      >{`
         .app-container {
           min-height: 100vh;
           background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 50%, #f3e8ff 100%);

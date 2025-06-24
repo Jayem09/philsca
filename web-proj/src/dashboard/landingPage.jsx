@@ -1,542 +1,733 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { FaBars, FaSearch, FaTimes, FaHome, FaCalculator, FaThermometerHalf, FaChevronDown } from "react-icons/fa";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/js/dist/offcanvas"; // Import Offcanvas JavaScript
+import React, { useState } from 'react';
+import { Menu, X, Search, Bell, Settings, User, BookOpen, Home, Target, Award, Calculator, Thermometer, ChevronDown, Zap, FileText } from 'lucide-react';
 
-// Weight Converter Component
-const WeightCal = ({ onClose }) => (
-  <div className="container mt-4">
-    <div className="card shadow-lg" style={{ maxWidth: '500px', margin: '0 auto' }}>
-      <div className="card-header d-flex justify-content-between align-items-center bg-primary text-white">
-        <h4 className="mb-0">Weight Converter</h4>
-        <button onClick={onClose} className="btn btn-outline-light btn-sm" aria-label="Close Weight Converter">
-          <FaTimes />
-        </button>
-      </div>
-      <div className="card-body">
-        <div className="mb-3">
-          <label htmlFor="weightInput" className="form-label visually-hidden">Enter weight</label>
-          <input type="number" id="weightInput" placeholder="Enter weight" className="form-control" aria-label="Weight input" />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="unitSelect" className="form-label visually-hidden">Select unit</label>
-          <select id="unitSelect" className="form-select" aria-label="Weight unit selection">
-            <option>Kilograms</option>
-            <option>Pounds</option>
-            <option>Grams</option>
-          </select>
-        </div>
-        <div className="alert alert-info text-center">
-          <strong>Result: 0</strong>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+const PDFContent = ({ currentView }) => {
+  const getContent = () => {
+    switch (currentView) {
+      case 'pdf-intro':
+        return {
+          title: 'Earth\'s Atmosphere: Composition, Climate & Weather',
+          content: (
+            <div className="atmosphere-content">
+              <div className="container">
+                <div className="header">
+                  <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium inline-block mb-4">
+                    MODULE 1 • TOPIC 1
+                  </div>
+                  <h1 className="text-4xl font-bold text-gray-800 mb-2">Earth's Atmosphere</h1>
+                  <p className="text-xl text-gray-600 mb-6">Composition, Climate & Weather</p>
+                  <div className="bg-gray-100 p-4 rounded-lg text-sm text-gray-600 mb-8">
+                    Astronauts aboard the International Space Station took this image showing Earth's atmosphere and moon on July 31, 2011.<br />
+                    (Image: © ISS Crew Earth Observations Experiment and Image Science & Analysis Laboratory/Johnson Space Center.)
+                  </div>
+                </div>
 
-// Temperature Converter Component
-const TemperatureConverter = ({ onClose }) => (
-  <div className="container mt-4">
-    <div className="card shadow-lg" style={{ maxWidth: '500px', margin: '0 auto' }}>
-      <div className="card-header d-flex justify-content-between align-items-center bg-danger text-white">
-        <h4 className="mb-0">Temperature Converter</h4>
-        <button onClick={onClose} className="btn btn-outline-light btn-sm" aria-label="Close Temperature Converter">
-          <FaTimes />
-        </button>
-      </div>
-      <div className="card-body">
-        <div className="mb-3">
-          <label htmlFor="tempInput" className="form-label visually-hidden">Enter temperature</label>
-          <input type="number" id="tempInput" placeholder="Enter temperature" className="form-control" aria-label="Temperature input" />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="tempUnitSelect" className="form-label visually-hidden">Select unit</label>
-          <select id="tempUnitSelect" className="form-select" aria-label="Temperature unit selection">
-            <option>Celsius</option>
-            <option>Fahrenheit</option>
-            <option>Kelvin</option>
-          </select>
-        </div>
-        <div className="alert alert-warning text-center">
-          <strong>Result: 0°</strong>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+                <div className="content-body space-y-8">
+                  <div className="intro-section">
+                    <p className="text-gray-700 leading-relaxed mb-6">
+                      Earth is the only planet in the solar system with an atmosphere that can sustain life. The blanket of gases not only contains the air that we breathe but also protects us from the blasts of heat and radiation emanating from the sun. It warms the planet by day and cools it at night.
+                    </p>
 
-// PDF Viewer Component
-const PDFViewer = ({ file, onClose }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+                    <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                      <strong className="text-blue-800">Key Facts:</strong>
+                      <ul className="mt-2 space-y-1 text-blue-700">
+                        <li>• Atmosphere thickness: ~300 miles (480 km)</li>
+                        <li>• Most atmosphere within: 10 miles (16 km) of surface</li>
+                        <li>• Sea level air pressure: 14.7 pounds per square inch</li>
+                        <li>• At 10,000 feet: 10 pounds per square inch</li>
+                      </ul>
+                    </div>
+                  </div>
 
-  useEffect(() => {
-    // Simulate network delay for PDF loading
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-      // In a real app, you'd verify PDF loading success here
-    }, 1500);
+                  <div className="section">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">Composition of Air</h2>
+                    <p className="text-gray-700 mb-4">According to NASA, the gases in Earth's atmosphere include:</p>
 
-    return () => clearTimeout(timer); // Cleanup on unmount
-  }, [file]);
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="bg-green-50 p-4 rounded-lg">
+                        <div className="font-bold text-green-800">Nitrogen — 78%</div>
+                      </div>
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <div className="font-bold text-blue-800">Oxygen — 21%</div>
+                      </div>
+                      <div className="bg-purple-50 p-4 rounded-lg">
+                        <div className="font-bold text-purple-800">Argon — 0.93%</div>
+                      </div>
+                      <div className="bg-red-50 p-4 rounded-lg">
+                        <div className="font-bold text-red-800">Carbon Dioxide — 0.04%</div>
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-lg mt-4">
+                      <div className="font-bold text-gray-800">Trace Gases</div>
+                      <div className="text-gray-600">Neon, helium, methane, krypton, hydrogen, and water vapor</div>
+                    </div>
+                  </div>
 
-  const spinnerStyle = {
-    width: '3rem',
-    height: '3rem'
-  };
+                  <div className="section">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-6">Atmospheric Layers</h2>
+                    <p className="text-gray-700 mb-6">
+                      The atmosphere can be divided into layers based on temperature variations. The red line in atmospheric diagrams shows how temperature varies with height, while pressure decreases dramatically with altitude.
+                    </p>
 
-  if (error) {
-    return (
-      <div className="container mt-4">
-        <div className="alert alert-danger text-center">
-          <h4>Error loading PDF</h4>
-          <p>{error.message}</p>
-          <button onClick={onClose} className="btn btn-danger mt-2">Close</button>
-        </div>
-      </div>
-    );
-  }
+                    <div className="space-y-6">
+                      <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <h4 className="text-lg font-bold text-gray-800 mb-3">The Troposphere</h4>
+                        <p className="text-gray-700 mb-3">
+                          This is the lowest part of the atmosphere - the part we live in. It contains most of our weather - clouds, rain, and snow. Temperature decreases with altitude by about 6.5°C per kilometer.
+                        </p>
+                        <p className="text-gray-700 mb-4">
+                          The troposphere contains about 75% of all atmospheric air and almost all water vapor. The decrease in temperature with height results from decreasing pressure - as air moves upward, it expands and cools.
+                        </p>
+                        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                          <strong className="text-yellow-800">Boundary Layer:</strong>
+                          <span className="text-yellow-700"> The lowest part where air motion is determined by Earth's surface properties. Turbulence redistributes heat, moisture, and pollutants.</span>
+                        </div>
+                        <p className="text-gray-700">
+                          <strong>Tropopause:</strong> The top boundary, lowest at poles (7-10 km) and highest near the equator (17-18 km).
+                        </p>
+                      </div>
 
-  return (
-    <div className="container-fluid mt-3">
-      <div className="card shadow-lg">
-        <div className="card-header d-flex justify-content-between align-items-center bg-dark text-white">
-          <h5 className="mb-0">PDF Viewer</h5>
-          <button onClick={onClose} className="btn btn-outline-light btn-sm" aria-label="Close PDF Viewer">
-            <FaTimes />
-          </button>
-        </div>
-        <div className="card-body p-0" style={{ height: '80vh', position: 'relative' }}>
-          {isLoading ? (
-            <div className="d-flex justify-content-center align-items-center h-100 position-absolute w-100">
-              <div className="spinner-border text-primary" style={spinnerStyle} role="status">
-                <span className="visually-hidden">Loading...</span>
+                      <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <h4 className="text-lg font-bold text-gray-800 mb-3">The Stratosphere</h4>
+                        <p className="text-gray-700 mb-4">
+                          Extends from the tropopause to about 50 km. Contains much of the atmosphere's ozone, which absorbs dangerous UV radiation from the sun, protecting us from skin cancer and other health damage.
+                        </p>
+                        <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+                          <strong className="text-red-800">Ozone Depletion:</strong>
+                          <span className="text-red-700"> CFCs and halons once used in refrigerators and spray cans reduced stratospheric ozone, creating the "Antarctic ozone hole." Recovery is expected throughout the 21st century as harmful chemical production has stopped.</span>
+                        </div>
+                        <p className="text-gray-700">
+                          Temperature increases with height due to UV absorption by ozone. Temperatures are highest over the summer pole and lowest over the winter pole.
+                        </p>
+                      </div>
+
+                      <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <h4 className="text-lg font-bold text-gray-800 mb-3">The Mesosphere</h4>
+                        <p className="text-gray-700">
+                          Located above the stratosphere, temperature again decreases with height, reaching a minimum of about -90°C at the "mesopause" - the coldest temperatures in Earth's atmosphere.
+                        </p>
+                      </div>
+
+                      <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <h4 className="text-lg font-bold text-gray-800 mb-3">The Thermosphere & Ionosphere</h4>
+                        <p className="text-gray-700 mb-3">
+                          In the thermosphere, ultraviolet radiation causes photoionization of molecules, creating ions. This constitutes the larger part of the ionosphere.
+                        </p>
+                        <p className="text-gray-700">
+                          The ionosphere isn't a distinct layer but a series of regions in the mesosphere and thermosphere where high-energy solar radiation has knocked electrons loose from atoms and molecules.
+                        </p>
+                      </div>
+
+                      <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <h4 className="text-lg font-bold text-gray-800 mb-3">The Exosphere</h4>
+                        <p className="text-gray-700">
+                          The uppermost region (above ~500 km) that gradually fades into space. Contains mainly oxygen and hydrogen atoms that rarely collide and follow ballistic trajectories under gravity's influence. Some particles escape into space.
+                        </p>
+                      </div>
+
+                      <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <h4 className="text-lg font-bold text-gray-800 mb-3">The Magnetosphere</h4>
+                        <p className="text-gray-700">
+                          Earth behaves like a huge magnet, trapping electrons and protons in Van Allen radiation belts (3,000 and 16,000 km above Earth). This region where charged particles spiral along magnetic field lines is called the magnetosphere.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="comparison-section">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-6">Planetary Comparison: Earth, Venus & Mars</h2>
+                    <p className="text-gray-700 mb-6">
+                      Scientists compare these three rocky inner solar system planets to better understand Earth's formation and composition.
+                    </p>
+
+                    <div className="grid md:grid-cols-3 gap-6">
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+                        <h4 className="text-lg font-bold text-green-800 mb-3">🌍 Earth</h4>
+                        <p className="text-green-700">
+                          Perfect balance of gases supporting life, with nitrogen and oxygen as primary components. Moderate greenhouse effect maintains suitable temperatures for liquid water.
+                        </p>
+                      </div>
+
+                      <div className="bg-orange-50 border border-orange-200 rounded-lg p-6">
+                        <h4 className="text-lg font-bold text-orange-800 mb-3">♀ Venus</h4>
+                        <p className="text-orange-700">
+                          Almost entirely carbon dioxide with traces of nitrogen and sulfuric acid. Runaway greenhouse effect creates crushing pressure (90x Earth's) and oven-like temperatures (467°C). Thick clouds hide the surface.
+                        </p>
+                      </div>
+
+                      <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+                        <h4 className="text-lg font-bold text-red-800 mb-3">♂ Mars</h4>
+                        <p className="text-red-700">
+                          Mostly carbon dioxide with traces of nitrogen, argon, and oxygen. Atmosphere is 100x thinner than Earth's. Evidence suggests it once had flowing water over 4.5 billion years ago before atmospheric loss occurred.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg mt-6">
+                      <strong className="text-blue-800">Habitability:</strong>
+                      <span className="text-blue-700"> Scientists define habitability as being close enough to a star for liquid water to exist on the surface - not too far (water freezes) or too close (water evaporates). However, habitability also depends on atmospheric composition, stellar variability, and other factors.</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <p className="ms-3 text-muted">Loading PDF...</p>
             </div>
-          ) : (
-            <iframe
-              src={file}
-              style={{ width: '100%', height: '100%', border: 'none' }}
-              title="PDF Viewer"
-              onError={() => setError(new Error("Failed to load PDF iframe."))} // Basic error handling for iframe
-            />
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
+          )
+        };
 
-// Menu configuration
-const menuConfig = [
-  {
-    name: "Home",
-    icon: FaHome,
-    type: "home"
-  },
-  {
-    name: "Module 1",
-    hasChildren: true,
-    children: [
-      { name: "Topic 1", pdf: "/pdf/Module 1 (Topic 1).pdf" },
-      { name: "Topic 2", pdf: "/pdf/Module 1 (Topic 2).pdf" },
-    ],
-  },
-  {
-    name: "Module 2",
-    hasChildren: true,
-    children: [
-      { name: "Topic 1", pdf: "/pdf/Module 2 (Topic 1).pdf" },
-      { name: "Topic 2", pdf: "/pdf/Module 2 (Topic 2).pdf" },
-    ],
-  },
-  {
-    name: "Module 3",
-    hasChildren: true,
-    children: [
-      { name: "Topic 1", pdf: "/pdf/Module 3 (Topic 1).pdf" },
-      { name: "Topic 2", pdf: "/pdf/Module 3 (Topic 2).pdf" },
-      { name: "Topic 3", pdf: "/pdf/topic3.pdf" },
-    ],
-  },
-  {
-    name: "Weight Converter",
-    icon: FaCalculator,
-    type: "weight"
-  },
-  {
-    name: "Temperature Converter",
-    icon: FaThermometerHalf,
-    type: "temperature"
-  }
-];
-
-// Custom styles (kept inline for simplicity, consider CSS modules for larger projects)
-const styles = {
-  landingPage: {
-    minHeight: '100vh',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    fontFamily: 'Arial, sans-serif'
-  },
-  navbar: {
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    backdropFilter: 'blur(10px)',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
-    zIndex: 1040
-  },
-  sidebarHeader: {
-    padding: '1.5rem',
-    borderBottom: '1px solid #e9ecef',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    color: 'white'
-  },
-  menuItem: {
-    padding: '0.75rem 1rem',
-    cursor: 'pointer',
-    borderRadius: '0.5rem',
-    margin: '0.25rem',
-    transition: 'all 0.3s ease',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    color: '#343a40' // Default text color
-  },
-  menuItemHover: {
-    backgroundColor: '#f8f9fa',
-    transform: 'translateX(5px)',
-    color: '#007bff' // Highlight color on hover
-  },
-  menuItemActive: {
-    backgroundColor: '#e3f2fd',
-    color: '#007bff',
-    fontWeight: 'bold'
-  },
-  nestedItem: {
-    padding: '0.5rem 1rem',
-    cursor: 'pointer',
-    borderRadius: '0.25rem',
-    margin: '0.125rem 0',
-    marginLeft: '1rem',
-    fontSize: '0.9rem',
-    color: '#6c757d',
-    transition: 'all 0.2s ease'
-  },
-  nestedItemHover: {
-    backgroundColor: '#e3f2fd',
-    color: '#1976d2'
-  },
-  nestedItemActive: {
-    backgroundColor: '#cfe2ff', // Lighter blue for active nested item
-    color: '#0a58ca',
-    fontWeight: 'bold'
-  },
-  mainContent: {
-    marginTop: '80px',
-    padding: '2rem'
-  },
-  homeContent: {
-    textAlign: 'center',
-    padding: '4rem 2rem',
-    color: 'white'
-  },
-  featureCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    backdropFilter: 'blur(10px)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    borderRadius: '1rem',
-    padding: '2rem',
-    margin: '1rem',
-    transition: 'transform 0.3s ease',
-    cursor: 'pointer'
-  },
-  searchContainer: {
-    position: 'relative',
-    maxWidth: '400px',
-    width: '100%'
-  },
-  searchIcon: {
-    position: 'absolute',
-    left: '12px',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    color: '#6c757d'
-  },
-  searchInput: {
-    paddingLeft: '40px',
-    borderRadius: '25px',
-    border: '1px solid #dee2e6'
-  }
-};
-
-export default function LandingPage() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [expandedModule, setExpandedModule] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedContent, setSelectedContent] = useState({ type: "home" }); // { type: "home" | "pdf", file: "path" | "weight" | "temperature" }
-  const [hoveredItem, setHoveredItem] = useState(null);
-
-  const filteredMenuItems = useMemo(() => {
-    if (!searchQuery) return menuConfig;
-
-    const lowerCaseQuery = searchQuery.toLowerCase();
-    return menuConfig.filter(item => {
-      // Check if main item name matches
-      if (item.name.toLowerCase().includes(lowerCaseQuery)) {
-        return true;
-      }
-      // Check if any child item name matches
-      if (item.children && item.children.some(child =>
-        child.name.toLowerCase().includes(lowerCaseQuery)
-      )) {
-        return true;
-      }
-      return false;
-    });
-  }, [searchQuery]);
-
-  const toggleSidebar = useCallback(() => {
-    setIsOpen(prev => !prev);
-  }, []);
-
-  const toggleModule = useCallback((index) => {
-    setExpandedModule(prev => prev === index ? null : index);
-  }, []);
-
-  const handleMenuItemClick = useCallback((item) => {
-    setSelectedContent({ type: item.type });
-    // Bootstrap's Offcanvas handles closing, so directly setting isOpen(false) here might conflict.
-    // Instead, rely on data-bs-dismiss="offcanvas" on the close button or programmatically close via BS API.
-    // For now, we'll keep this for direct JS calls if needed.
-    // setIsOpen(false);
-  }, []);
-
-  const handlePdfClick = useCallback((pdf) => {
-    setSelectedContent({ type: "pdf", file: pdf });
-    // setIsOpen(false);
-  }, []);
-
-  const closeContent = useCallback(() => {
-    setSelectedContent({ type: "home" });
-  }, []);
-
-  const renderContent = () => {
-    switch (selectedContent.type) {
-      case "pdf":
-        return <PDFViewer file={selectedContent.file} onClose={closeContent} />;
-      case "weight":
-        return <WeightCal onClose={closeContent} />;
-      case "temperature":
-        return <TemperatureConverter onClose={closeContent} />;
-      case "home":
-      default:
-        return (
-          <div style={styles.homeContent}>
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <h1 className="display-1 fw-bold mb-4">Welcome to Learning Hub</h1>
-              <p className="lead mb-5" style={{ maxWidth: '600px', margin: '0 auto' }}>
-                Explore our comprehensive learning modules, take quizzes, and use helpful conversion tools.
-                Navigate through the sidebar to access different sections.
+      case 'pdf-advanced':
+        return {
+          title: 'Advanced Learning Concepts',
+          content: (
+            <div className="space-y-8">
+              <h2 className="text-3xl font-bold text-gray-800 mb-6">Advanced Learning Methodologies</h2>
+              <p className="text-gray-700 leading-relaxed mb-8">
+                This section delves into sophisticated learning approaches that leverage cutting-edge technology and research-backed pedagogical methods.
               </p>
-              <div className="row justify-content-center mt-5">
-                <div className="col-md-4 mb-4 mb-md-0">
-                  <div
-                    style={styles.featureCard}
-                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-10px)'}
-                    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                    onClick={() => setSelectedContent({ type: "weight" })}
-                  >
-                    <FaCalculator size={48} className="mb-3" />
-                    <h4>Conversion Tools</h4>
-                    <p>Quick and easy unit conversions</p>
+
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Machine Learning in Education</h3>
+                <p className="text-gray-700 mb-4">Modern educational systems increasingly incorporate AI and machine learning to:</p>
+                <ul className="space-y-2 text-gray-700">
+                  <li>• Predict student performance and identify at-risk learners</li>
+                  <li>• Recommend personalized learning paths</li>
+                  <li>• Automate content generation and assessment</li>
+                  <li>• Provide intelligent tutoring and support</li>
+                </ul>
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Cognitive Load Theory</h3>
+                <p className="text-gray-700 mb-4">Understanding how the human brain processes information is crucial for designing effective learning experiences:</p>
+
+                <div className="space-y-4">
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <strong className="text-blue-800">Intrinsic Load:</strong>
+                    <span className="text-blue-700"> The mental effort required to process the essential information</span>
                   </div>
-                </div>
-                <div className="col-md-4">
-                  <div
-                    style={styles.featureCard}
-                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-10px)'}
-                    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                    onClick={() => setExpandedModule(0)} // Example: Expands Module 1
-                  >
-                    <div style={{ fontSize: '48px' }} className="mb-3">📚</div>
-                    <h4>Learning Modules</h4>
-                    <p>Comprehensive study materials</p>
+                  <div className="bg-red-50 p-4 rounded-lg">
+                    <strong className="text-red-800">Extraneous Load:</strong>
+                    <span className="text-red-700"> Mental effort wasted on poorly designed instruction</span>
+                  </div>
+                  <div className="bg-green-50 p-4 rounded-lg">
+                    <strong className="text-green-800">Germane Load:</strong>
+                    <span className="text-green-700"> Mental effort devoted to processing and constructing schemas</span>
                   </div>
                 </div>
               </div>
-            </motion.div>
-          </div>
-        );
+            </div>
+          )
+        };
+
+      case 'pdf-fundamentals':
+        return {
+          title: 'Learning Fundamentals',
+          content: (
+            <div className="space-y-8">
+              <h2 className="text-3xl font-bold text-gray-800 mb-6">Core Learning Principles</h2>
+              <p className="text-gray-700 leading-relaxed mb-8">
+                Understanding the fundamental principles of how people learn is essential for creating effective educational experiences.
+              </p>
+
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Learning Theories</h3>
+
+                <div className="space-y-6">
+                  <div className="border-l-4 border-blue-500 pl-4">
+                    <h4 className="font-bold text-blue-800">Behaviorism</h4>
+                    <p className="text-gray-700">Learning through conditioning and reinforcement</p>
+                    <ul className="mt-2 space-y-1 text-gray-600 text-sm">
+                      <li>• Classical conditioning (Pavlov)</li>
+                      <li>• Operant conditioning (Skinner)</li>
+                      <li>• Applications in modern education</li>
+                    </ul>
+                  </div>
+
+                  <div className="border-l-4 border-green-500 pl-4">
+                    <h4 className="font-bold text-green-800">Cognitivism</h4>
+                    <p className="text-gray-700">Learning as information processing</p>
+                    <ul className="mt-2 space-y-1 text-gray-600 text-sm">
+                      <li>• Memory systems and processes</li>
+                      <li>• Schema theory</li>
+                      <li>• Cognitive development stages</li>
+                    </ul>
+                  </div>
+
+                  <div className="border-l-4 border-purple-500 pl-4">
+                    <h4 className="font-bold text-purple-800">Constructivism</h4>
+                    <p className="text-gray-700">Learning through active construction of knowledge</p>
+                    <ul className="mt-2 space-y-1 text-gray-600 text-sm">
+                      <li>• Social constructivism (Vygotsky)</li>
+                      <li>• Individual constructivism (Piaget)</li>
+                      <li>• Implications for instructional design</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        };
+
+      default:
+        return {
+          title: 'Learning Content',
+          content: (
+            <div className="text-center py-16">
+              <BookOpen size={64} className="mx-auto text-gray-400 mb-4" />
+              <p className="text-gray-600">Select a module from the sidebar to view its content.</p>
+            </div>
+          )
+        };
     }
   };
 
+  const { title, content } = getContent();
+
   return (
-    <div style={styles.landingPage}>
-      {/* Navigation Bar */}
-      <nav className="navbar navbar-expand-lg fixed-top" style={styles.navbar}>
-        <div className="container-fluid">
-          <button
-            className="btn btn-outline-primary me-3"
-            type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasSidebar"
-            aria-controls="offcanvasSidebar"
-            aria-label="Toggle sidebar"
-            onClick={() => setIsOpen(true)} // Set isOpen true when sidebar opens via Bootstrap toggle
-          >
-            <FaBars />
-          </button>
-
-          <div style={styles.searchContainer} className="d-flex me-auto">
-            <FaSearch style={styles.searchIcon} />
-            <input
-              type="text"
-              className="form-control"
-              style={styles.searchInput}
-              placeholder="Search modules and topics..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              aria-label="Search modules and topics"
-            />
-          </div>
-
-          {/* Spacer div to balance navbar (optional, adjust as needed) */}
-          <div className="d-none d-lg-block" style={{ width: '50px' }}></div>
-        </div>
-      </nav>
-
-      {/* Sidebar - Bootstrap Offcanvas */}
-      <div
-        className="offcanvas offcanvas-start"
-        tabIndex="-1"
-        id="offcanvasSidebar"
-        aria-labelledby="offcanvasSidebarLabel"
-        style={{ width: '320px' }} // Apply your custom width
-        onShow={() => setIsOpen(true)} // Keep React state in sync with Bootstrap's
-        onHide={() => setIsOpen(false)} // Keep React state in sync with Bootstrap's
-      >
-        <div className="offcanvas-header" style={styles.sidebarHeader}>
-          <h5 className="offcanvas-title" id="offcanvasSidebarLabel">Learning Hub</h5>
-          <button
-            type="button"
-            className="btn-close text-reset"
-            data-bs-dismiss="offcanvas"
-            aria-label="Close sidebar"
-          ></button>
-        </div>
-        <div className="offcanvas-body p-0">
-          <div className="p-3">
-            {filteredMenuItems.map((item, index) => {
-              const isMainActive =
-                selectedContent.type === item.type ||
-                (item.hasChildren && expandedModule === index);
-
-              return (
-                <div key={index}>
-                  <div
-                    style={{
-                      ...styles.menuItem,
-                      ...(hoveredItem === `main-${index}` ? styles.menuItemHover : {}),
-                      ...(isMainActive ? styles.menuItemActive : {})
-                    }}
-                    onMouseEnter={() => setHoveredItem(`main-${index}`)}
-                    onMouseLeave={() => setHoveredItem(null)}
-                    onClick={() => {
-                      if (item.hasChildren) {
-                        toggleModule(index);
-                      } else {
-                        handleMenuItemClick(item);
-                      }
-                      // Close offcanvas when a menu item is clicked (only for non-parent items)
-                      if (!item.hasChildren) {
-                        const offcanvasElement = document.getElementById('offcanvasSidebar');
-                        if (offcanvasElement) {
-                          const bsOffcanvas = window.bootstrap.Offcanvas.getInstance(offcanvasElement) || new window.bootstrap.Offcanvas(offcanvasElement);
-                          bsOffcanvas.hide();
-                        }
-                      }
-                    }}
-                    aria-expanded={item.hasChildren ? (expandedModule === index ? "true" : "false") : undefined}
-                  >
-                    <div className="d-flex align-items-center">
-                      {item.icon && <item.icon className="me-2" />}
-                      <span>{item.name}</span>
-                    </div>
-                    {item.hasChildren && (
-                      <motion.div
-                        animate={{ rotate: expandedModule === index ? 180 : 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <FaChevronDown />
-                      </motion.div>
-                    )}
-                  </div>
-
-                  <AnimatePresence>
-                    {item.hasChildren && expandedModule === index && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        style={{ overflow: 'hidden' }}
-                      >
-                        {item.children.map((child, childIndex) => {
-                          const isChildActive = selectedContent.type === "pdf" && selectedContent.file === child.pdf;
-                          return (
-                            <div
-                              key={childIndex}
-                              style={{
-                                ...styles.nestedItem,
-                                ...(hoveredItem === `child-${index}-${childIndex}` ? styles.nestedItemHover : {}),
-                                ...(isChildActive ? styles.nestedItemActive : {})
-                              }}
-                              onMouseEnter={() => setHoveredItem(`child-${index}-${childIndex}`)}
-                              onMouseLeave={() => setHoveredItem(null)}
-                              onClick={() => {
-                                handlePdfClick(child.pdf);
-                                // Close offcanvas when a PDF item is clicked
-                                const offcanvasElement = document.getElementById('offcanvasSidebar');
-                                if (offcanvasElement) {
-                                  const bsOffcanvas = window.bootstrap.Offcanvas.getInstance(offcanvasElement) || new window.bootstrap.Offcanvas(offcanvasElement);
-                                  bsOffcanvas.hide();
-                                }
-                              }}
-                              aria-current={isChildActive ? "page" : undefined}
-                            >
-                              {child.name}
-                            </div>
-                          );
-                        })}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div style={styles.mainContent}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={selectedContent.type + (selectedContent.file || '')} // Key changes based on content type and file
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            {renderContent()}
-          </motion.div>
-        </AnimatePresence>
+    <div className="max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6 border-b border-gray-200 pb-4">
+        {title}
+      </h1>
+      <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+        {content}
       </div>
     </div>
   );
-}
+};
+
+const LearningHub = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [currentView, setCurrentView] = useState('home');
+  const [expandedMenus, setExpandedMenus] = useState({});
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Weight converter state
+  const [weightInput, setWeightInput] = useState('');
+  const [weightUnit, setWeightUnit] = useState('kg');
+
+  // Temperature converter state
+  const [tempInput, setTempInput] = useState('');
+  const [tempUnit, setTempUnit] = useState('celsius');
+
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  const closeSidebar = () => setSidebarOpen(false);
+
+  const toggleSubmenu = (menuId) => {
+    setExpandedMenus(prev => ({
+      ...prev,
+      [menuId]: !prev[menuId]
+    }));
+  };
+
+  const showView = (view) => {
+    setCurrentView(view);
+    closeSidebar();
+  };
+
+  const convertWeight = () => {
+    const weight = parseFloat(weightInput);
+    if (isNaN(weight) || weight <= 0) return null;
+
+    // Convert to kg first
+    let weightInKg;
+    switch (weightUnit) {
+      case 'kg': weightInKg = weight; break;
+      case 'lb': weightInKg = weight * 0.453592; break;
+      case 'g': weightInKg = weight / 1000; break;
+      case 'oz': weightInKg = weight * 0.0283495; break;
+      case 'st': weightInKg = weight * 6.35029; break;
+      default: weightInKg = weight;
+    }
+
+    return {
+      kg: weightInKg,
+      lb: weightInKg / 0.453592,
+      g: weightInKg * 1000,
+      oz: weightInKg / 0.0283495,
+      st: weightInKg / 6.35029
+    };
+  };
+
+  const convertTemperature = () => {
+    const temp = parseFloat(tempInput);
+    if (isNaN(temp)) return null;
+
+    let celsius;
+    switch (tempUnit) {
+      case 'celsius': celsius = temp; break;
+      case 'fahrenheit': celsius = (temp - 32) * 5 / 9; break;
+      case 'kelvin': celsius = temp - 273.15; break;
+    }
+
+    return {
+      celsius: celsius,
+      fahrenheit: celsius * 9 / 5 + 32,
+      kelvin: celsius + 273.15
+    };
+  };
+
+  const weightResults = convertWeight();
+  const tempResults = convertTemperature();
+
+  const unitNames = {
+    kg: 'Kilograms',
+    lb: 'Pounds',
+    g: 'Grams',
+    oz: 'Ounces',
+    st: 'Stones'
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-600 to-purple-700">
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-b border-white/20 z-50 h-16">
+        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button onClick={toggleSidebar} className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700">
+              <Menu size={20} />
+            </button>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
+                <BookOpen size={16} />
+              </div>
+              <span className="font-bold text-lg text-gray-800">Learning Hub</span>
+            </div>
+          </div>
+
+          <div className="flex-1 max-w-md mx-8">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+              <input
+                type="text"
+                placeholder="Search modules and topics..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700">
+              <Bell size={20} />
+            </button>
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700">
+              <Settings size={20} />
+            </button>
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700">
+              <User size={20} />
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Sidebar */}
+      <div className={`fixed left-0 top-0 h-full w-80 bg-white shadow-xl z-50 transform transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="bg-gradient-to-br from-blue-500 to-purple-600 p-6 text-white flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+              <BookOpen size={20} />
+            </div>
+            <span className="font-bold text-xl">Learning Hub</span>
+          </div>
+          <button onClick={closeSidebar} className="p-2 hover:bg-white/20 rounded-lg transition-colors">
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-4 space-y-2">
+          <div className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors ${currentView === 'home' ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50 text-gray-700'}`} onClick={() => showView('home')}>
+            <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+              <Home size={16} className="text-gray-600" />
+            </div>
+            <span className="font-medium">Home</span>
+          </div>
+
+          <div className="space-y-1">
+            <div className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 cursor-pointer text-gray-700" onClick={() => toggleSubmenu('module1')}>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <BookOpen size={16} className="text-gray-600" />
+                </div>
+                <span className="font-medium">Module 1 - Atmosphere</span>
+              </div>
+              <ChevronDown size={16} className={`transform transition-transform ${expandedMenus.module1 ? 'rotate-180' : ''}`} />
+            </div>
+            {expandedMenus.module1 && (
+              <div className="ml-4 space-y-1">
+                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-intro')}>Earth's Atmosphere: Composition, Climate & Weather</div>
+                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-advanced')}>Advanced Concepts</div>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-1">
+            <div className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 cursor-pointer text-gray-700" onClick={() => toggleSubmenu('module2')}>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <Target size={16} className="text-gray-600" />
+                </div>
+                <span className="font-medium">Module 2 - Learning</span>
+              </div>
+              <ChevronDown size={16} className={`transform transition-transform ${expandedMenus.module2 ? 'rotate-180' : ''}`} />
+            </div>
+            {expandedMenus.module2 && (
+              <div className="ml-4 space-y-1">
+                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-fundamentals')}>Fundamentals</div>
+                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-applications')}>Applications</div>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-1">
+            <div className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 cursor-pointer text-gray-700" onClick={() => toggleSubmenu('module3')}>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <Award size={16} className="text-gray-600" />
+                </div>
+                <span className="font-medium">Module 3 - Advanced</span>
+              </div>
+              <ChevronDown size={16} className={`transform transition-transform ${expandedMenus.module3 ? 'rotate-180' : ''}`} />
+            </div>
+            {expandedMenus.module3 && (
+              <div className="ml-4 space-y-1">
+                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-theory')}>Theory</div>
+                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-practice')}>Practice</div>
+                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-cases')}>Case Studies</div>
+              </div>
+            )}
+          </div>
+
+          <div className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors ${currentView === 'weight' ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50 text-gray-700'}`} onClick={() => showView('weight')}>
+            <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+              <Calculator size={16} className="text-gray-600" />
+            </div>
+            <span className="font-medium">Weight Converter</span>
+          </div>
+
+          <div className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors ${currentView === 'temperature' ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50 text-gray-700'}`} onClick={() => showView('temperature')}>
+            <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+              <Thermometer size={16} className="text-gray-600" />
+            </div>
+            <span className="font-medium">Temperature Converter</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" onClick={closeSidebar} />
+      )}
+
+
+      {/* Main Content */}
+      <main className="pt-16 min-h-screen">
+        <div className="p-6">
+          {currentView === 'home' && (
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-12">
+                <h1 className="text-4xl font-bold text-white mb-4">Welcome to Learning Hub</h1>
+                <p className="text-xl text-white/80">Explore interactive modules and powerful learning tools</p>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div className="bg-white/95 backdrop-blur-lg rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-shadow cursor-pointer" onClick={() => showView('pdf-intro')}>
+                  <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mb-4">
+                    <BookOpen size={24} className="text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">Earth's Atmosphere</h3>
+                  <p className="text-gray-600">Learn about atmospheric layers, composition, and climate systems</p>
+                </div>
+
+                <div className="bg-white/95 backdrop-blur-lg rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-shadow cursor-pointer" onClick={() => showView('weight')}>
+                  <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mb-4">
+                    <Calculator size={24} className="text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">Weight Converter</h3>
+                  <p className="text-gray-600">Convert between different weight units instantly</p>
+                </div>
+
+                <div className="bg-white/95 backdrop-blur-lg rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-shadow cursor-pointer" onClick={() => showView('temperature')}>
+                  <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center mb-4">
+                    <Thermometer size={24} className="text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">Temperature Converter</h3>
+                  <p className="text-gray-600">Convert between Celsius, Fahrenheit, and Kelvin</p>
+                </div>
+              </div>
+
+              <div className="bg-white/95 backdrop-blur-lg rounded-2xl p-8 shadow-xl">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">Recent Activity</h2>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <FileText size={16} className="text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-800">Completed: Earth's Atmosphere Module</p>
+                      <p className="text-sm text-gray-600">2 hours ago</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
+                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                      <Calculator size={16} className="text-green-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-800">Used Weight Converter</p>
+                      <p className="text-sm text-gray-600">5 hours ago</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {(currentView.startsWith('pdf-') || currentView === 'pdf-applications' || currentView === 'pdf-theory' || currentView === 'pdf-practice' || currentView === 'pdf-cases') && (
+            <div className="bg-white/95 backdrop-blur-lg rounded-2xl shadow-xl p-8">
+              <PDFContent currentView={currentView} />
+            </div>
+          )}
+
+          {currentView === 'weight' && (
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white/95 backdrop-blur-lg rounded-2xl shadow-xl p-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
+                    <Calculator size={24} className="text-white" />
+                  </div>
+                  <h1 className="text-3xl font-bold text-gray-800">Weight Converter</h1>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Enter Weight</label>
+                      <input
+                        type="number"
+                        placeholder="Enter weight value"
+                        value={weightInput}
+                        onChange={(e) => setWeightInput(e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">From Unit</label>
+                      <select
+                        value={weightUnit}
+                        onChange={(e) => setWeightUnit(e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      >
+                        <option value="kg">Kilograms (kg)</option>
+                        <option value="lb">Pounds (lb)</option>
+                        <option value="g">Grams (g)</option>
+                        <option value="oz">Ounces (oz)</option>
+                        <option value="st">Stones (st)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-800">Conversion Results</h3>
+                    {weightResults ? (
+                      <div className="space-y-3">
+                        {Object.entries(weightResults).map(([unit, value]) => (
+                          <div key={unit} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span className="font-medium text-gray-700">{unitNames[unit]}</span>
+                            <span className="text-lg font-bold text-green-600">{value.toFixed(4)} {unit}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-500 text-center py-8">Enter a weight value to see conversions</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {currentView === 'temperature' && (
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white/95 backdrop-blur-lg rounded-2xl shadow-xl p-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center">
+                    <Thermometer size={24} className="text-white" />
+                  </div>
+                  <h1 className="text-3xl font-bold text-gray-800">Temperature Converter</h1>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Enter Temperature</label>
+                      <input
+                        type="number"
+                        placeholder="Enter temperature value"
+                        value={tempInput}
+                        onChange={(e) => setTempInput(e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">From Unit</label>
+                      <select
+                        value={tempUnit}
+                        onChange={(e) => setTempUnit(e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      >
+                        <option value="celsius">Celsius (°C)</option>
+                        <option value="fahrenheit">Fahrenheit (°F)</option>
+                        <option value="kelvin">Kelvin (K)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-800">Conversion Results</h3>
+                    {tempResults ? (
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                          <span className="font-medium text-gray-700">Celsius</span>
+                          <span className="text-lg font-bold text-red-600">{tempResults.celsius.toFixed(2)}°C</span>
+                        </div>
+                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                          <span className="font-medium text-gray-700">Fahrenheit</span>
+                          <span className="text-lg font-bold text-red-600">{tempResults.fahrenheit.toFixed(2)}°F</span>
+                        </div>
+                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                          <span className="font-medium text-gray-700">Kelvin</span>
+                          <span className="text-lg font-bold text-red-600">{tempResults.kelvin.toFixed(2)}K</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-gray-500 text-center py-8">Enter a temperature value to see conversions</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-8 p-4 bg-blue-50 rounded-xl">
+                  <h4 className="font-semibold text-blue-800 mb-2">Temperature Reference Points</h4>
+                  <div className="grid md:grid-cols-3 gap-4 text-sm">
+                    <div>
+                      <strong className="text-blue-700">Water Freezing:</strong>
+                      <div className="text-blue-600">0°C = 32°F = 273.15K</div>
+                    </div>
+                    <div>
+                      <strong className="text-blue-700">Room Temperature:</strong>
+                      <div className="text-blue-600">20°C = 68°F = 293.15K</div>
+                    </div>
+                    <div>
+                      <strong className="text-blue-700">Water Boiling:</strong>
+                      <div className="text-blue-600">100°C = 212°F = 373.15K</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default LearningHub;

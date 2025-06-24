@@ -60,6 +60,7 @@ function FirebaseQuizSystem() {
     const [quizCompleted, setQuizCompleted] = useState(false);
     const [timeLeft, setTimeLeft] = useState(30);
     const [quizActive, setQuizActive] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
     const [showResults, setShowResults] = useState(false);
     const [connectionStatus, setConnectionStatus] = useState('Connecting...');
     const [shuffleLoading, setShuffleLoading] = useState(false);
@@ -595,7 +596,8 @@ function FirebaseQuizSystem() {
         borderRadius: '8px',
         fontSize: '16px',
         marginBottom: '10px',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        textAlign: isFocused || studentName ? 'left' : 'center',
     };
 
     const questionCardStyle = {
@@ -737,6 +739,8 @@ function FirebaseQuizSystem() {
                                 placeholder="Enter your name"
                                 value={studentName}
                                 onChange={(e) => setStudentName(e.target.value)}
+                                onFocus={() => setIsFocused(true)}
+                                onBlur={() => setIsFocused(false)}
                                 style={inputStyle}
                             />
                             <button
@@ -752,7 +756,7 @@ function FirebaseQuizSystem() {
                             </button>
                             <p style={{ marginTop: '20px', color: '#666' }}>
                                 Answer {questions.length} questions.<br />
-                                You have 30 seconds per question. Good luck!
+                                {/* You have 30 seconds per question. Good luck! */}
                             </p>
                         </>
                     )}
@@ -762,14 +766,14 @@ function FirebaseQuizSystem() {
             {quizActive && questions.length > 0 && questions[currentQuestionIndex] && (
                 <div>
                     <div style={timerStyle}>
-                        Time Left: {timeLeft}s
+                        {/* Time Left: {timeLeft}s */}
                     </div>
 
                     <div style={questionCardStyle}>
                         <h3 style={{ marginBottom: '20px', color: '#333' }}>
                             Question {currentQuestionIndex + 1} of {questions.length}
                         </h3>
-                        <p style={{ fontSize: '18px', marginBottom: '30px', lineHeight: '1.6' }}>
+                        <p style={{ fontSize: '18px', marginBottom: '30px', lineHeight: '1.6', color: '#000000' }}>
                             {questions[currentQuestionIndex].question}
                         </p>
 

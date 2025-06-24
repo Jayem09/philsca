@@ -463,14 +463,14 @@ const LearningHub = () => {
       <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-b border-white/20 z-50 h-16">
         <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button onClick={toggleSidebar} className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700">
+            <button onClick={toggleSidebar} className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400">
               <Menu size={20} />
             </button>
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
-                <BookOpen size={16} />
+              <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
+                <BookOpen size={20} />
               </div>
-              <span className="font-bold text-lg text-gray-800">Learning Hub</span>
+              <span className="font-bold text-lg text-gray-800">AerodynaMND</span>
             </div>
           </div>
 
@@ -482,19 +482,19 @@ const LearningHub = () => {
                 placeholder="Search modules and topics..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
               />
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700">
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400">
               <Bell size={20} />
             </button>
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700">
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400">
               <Settings size={20} />
             </button>
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700">
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400">
               <User size={20} />
             </button>
           </div>
@@ -508,7 +508,7 @@ const LearningHub = () => {
             <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
               <BookOpen size={20} />
             </div>
-            <span className="font-bold text-xl">Learning Hub</span>
+            <span className="font-bold text-xl">AerodynaMND</span>
           </div>
           <button onClick={closeSidebar} className="p-2 hover:bg-white/20 rounded-lg transition-colors">
             <X size={20} />
@@ -529,13 +529,13 @@ const LearningHub = () => {
                 <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
                   <BookOpen size={16} className="text-gray-600" />
                 </div>
-                <span className="font-medium">Module 1 - Atmosphere</span>
+                <span className="font-medium">Module 1</span>
               </div>
               <ChevronDown size={16} className={`transform transition-transform ${expandedMenus.module1 ? 'rotate-180' : ''}`} />
             </div>
             {expandedMenus.module1 && (
               <div className="ml-4 space-y-1">
-                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-intro')}>Earth's Atmosphere: Composition, Climate & Weather</div>
+                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800 text-blue-600" onClick={() => showView('pdf-intro')}>Earth's Atmosphere: Composition, Climate & Weather</div>
                 <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-advanced')}>Equation of State</div>
               </div>
             )}
@@ -606,7 +606,7 @@ const LearningHub = () => {
           {currentView === 'home' && (
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-12">
-                <h1 className="text-4xl font-bold text-white mb-4">Welcome to Learning Hub</h1>
+                <h1 className="text-4xl font-bold text-white mb-4">Welcome to AerodynaMND</h1>
                 <p className="text-xl text-white/80">Explore interactive modules and powerful learning tools</p>
               </div>
 
@@ -645,7 +645,7 @@ const LearningHub = () => {
                     </div>
                     <div>
                       <p className="font-medium text-gray-800">Completed: Earth's Atmosphere Module</p>
-                      <p className="text-sm text-gray-600">2 hours ago</p>
+                      <p className="text-sm text-gray-600">1 hours ago</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">

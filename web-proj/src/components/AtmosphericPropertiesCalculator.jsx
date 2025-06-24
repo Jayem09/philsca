@@ -12,7 +12,7 @@ function AtmosphericPropertiesCalculator() {
 
   const calculateTemperature = (altitude) => {
     const lapseRate = 6.5; // °C/km
-    const T0 = 288.15; // K (temperature at sea level in Kelvin)
+    const T0 = 288.2; // K (temperature at sea level in Kelvin)
     return T0 - (lapseRate * altitude / 1000);
   };
 

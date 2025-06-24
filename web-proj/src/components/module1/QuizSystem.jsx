@@ -192,18 +192,18 @@ function FirebaseQuizSystem() {
         };
     }, []);
 
-    // Timer effect
-    useEffect(() => {
-        let interval;
-        if (quizActive && timeLeft > 0 && questions.length > 0) {
-            interval = setInterval(() => {
-                setTimeLeft(timeLeft - 1);
-            }, 1000);
-        } else if (timeLeft === 0 && quizActive) {
-            handleNextQuestion();
-        }
-        return () => clearInterval(interval);
-    }, [quizActive, timeLeft, questions.length]);
+    // // Timer effect
+    // useEffect(() => {
+    //     let interval;
+    //     if (quizActive && timeLeft > 0 && questions.length > 0) {
+    //         interval = setInterval(() => {
+    //             setTimeLeft(timeLeft - 1);
+    //         }, 1000);
+    //     } else if (timeLeft === 0 && quizActive) {
+    //         handleNextQuestion();
+    //     }
+    //     return () => clearInterval(interval);
+    // }, [quizActive, timeLeft, questions.length]);
 
     // Authentication functions
     const handleAuthSubmit = async (e) => {

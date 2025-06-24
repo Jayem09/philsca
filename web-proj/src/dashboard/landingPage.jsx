@@ -176,7 +176,7 @@ const PDFContent = ({ currentView }) => {
 
       case 'pdf-advanced':
         return {
-          title: 'Equation of State & Aerodynamic Force',
+          title: '',
           content: (
             <div className="space-y-8">
               <div className="container">
@@ -301,45 +301,368 @@ const PDFContent = ({ currentView }) => {
 
       case 'pdf-fundamentals':
         return {
-          title: 'Learning Fundamentals',
+          title: '',
           content: (
             <div className="space-y-8">
-              <h2 className="text-3xl font-bold text-gray-800 mb-6">Core Learning Principles</h2>
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-gray-800 mb-2">The Myth of Daedalus and Icarus</h2>
+                <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium inline-block">
+                  MODULE 1 • TOPIC 1
+                </div>
+              </div>
+              {/* <h1 className="text-4xl font-bold text-gray-800 mb-2">Earth's Atmosphere</h1> */}
               <p className="text-gray-700 leading-relaxed mb-8">
-                Understanding the fundamental principles of how people learn is essential for creating effective educational experiences.
+                The myth of Daedalus and Icarus is one of the most known and fascinating Greek Myths, as it consists
+                of both historical and mythical details.
               </p>
 
               <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">Learning Theories</h3>
+                <h3 className="text-xl font-bold text-gray-800 mb-4">The Story</h3>
 
                 <div className="space-y-6">
                   <div className="border-l-4 border-blue-500 pl-4">
-                    <h4 className="font-bold text-blue-800">Behaviorism</h4>
-                    <p className="text-gray-700">Learning through conditioning and reinforcement</p>
-                    <ul className="mt-2 space-y-1 text-gray-600 text-sm">
-                      <li>• Classical conditioning (Pavlov)</li>
-                      <li>• Operant conditioning (Skinner)</li>
-                      <li>• Applications in modern education</li>
-                    </ul>
+                    <h4 className="font-bold text-blue-800">Daedalus in Crete</h4>
+                    <p className="text-gray-700">
+                      While in Crete Daedalus created the plan for the Minoan Palace of Knossos, one of the most important
+                      archaeological sites in Crete and Greece today. It was a magnificent architectural design and building,
+                      of 1,300 rooms, decorated with stunning frescoes and artifacts, saved until today.
+                    </p>
                   </div>
 
                   <div className="border-l-4 border-green-500 pl-4">
-                    <h4 className="font-bold text-green-800">Cognitivism</h4>
-                    <p className="text-gray-700">Learning as information processing</p>
-                    <ul className="mt-2 space-y-1 text-gray-600 text-sm">
-                      <li>• Memory systems and processes</li>
-                      <li>• Schema theory</li>
-                      <li>• Cognitive development stages</li>
-                    </ul>
+                    <h4 className="font-bold text-green-800">The Betrayal</h4>
+                    <p className="text-gray-700">
+                      King Minos and Daedalus had great understanding at first, but their relationships started deteriorating.
+                      The most common explanation is that Daedalus advised Princess Ariadne to give Theseus the thread that
+                      helped him escape the Labyrinth after killing the Minotaur.
+                    </p>
                   </div>
 
                   <div className="border-l-4 border-purple-500 pl-4">
-                    <h4 className="font-bold text-purple-800">Constructivism</h4>
-                    <p className="text-gray-700">Learning through active construction of knowledge</p>
-                    <ul className="mt-2 space-y-1 text-gray-600 text-sm">
-                      <li>• Social constructivism (Vygotsky)</li>
-                      <li>• Individual constructivism (Piaget)</li>
-                      <li>• Implications for instructional design</li>
+                    <h4 className="font-bold text-purple-800">The Escape</h4>
+                    <p className="text-gray-700">
+                      Imprisoned in the Labyrinth, Daedalus created wings from branches of osier and wax. He taught Icarus
+                      how to fly but warned him not to fly too close to the sun. Their flight was the first time man managed
+                      to fight the laws of nature and beat gravity.
+                    </p>
+                  </div>
+
+                  <div className="border-l-4 border-red-500 pl-4">
+                    <h4 className="font-bold text-red-800">The Tragedy</h4>
+                    <p className="text-gray-700">
+                      Icarus, excited by flying, ignored his father's warnings. His wings melted when he flew too close to
+                      the sun, and he fell into the sea. The Icarian Sea was named after him.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded-lg p-6 mt-8">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Aviation Pioneers</h3>
+
+                <div className="space-y-6">
+                  <div className="border-l-4 border-yellow-500 pl-4">
+                    <h4 className="font-bold text-yellow-800">Leonardo da Vinci (1452-1519)</h4>
+                    <p className="text-gray-700">
+                      Created designs for flying machines including the ornithopter, inspired by birds and bats. His designs
+                      were visionary but impractical with available technology.
+                    </p>
+                  </div>
+
+                  <div className="border-l-4 border-indigo-500 pl-4">
+                    <h4 className="font-bold text-indigo-800">Montgolfier Brothers (1783)</h4>
+                    <p className="text-gray-700">
+                      Conducted the first untethered hot-air balloon flights, including the first manned flight on November 21, 1783.
+                    </p>
+                  </div>
+
+                  <div className="border-l-4 border-pink-500 pl-4">
+                    <h4 className="font-bold text-pink-800">Sir George Cayley (1773-1857)</h4>
+                    <p className="text-gray-700">
+                      "Father of Aeronautics" who identified the four forces of flight and built the first successful human-carrying glider.
+                    </p>
+                  </div>
+
+                  <div className="border-l-4 border-teal-500 pl-4">
+                    <h4 className="font-bold text-teal-800">Otto Lilienthal (1848-1896)</h4>
+                    <p className="text-gray-700">
+                      Made over 2,000 glider flights and published important aerodynamic research before dying in a crash.
+                    </p>
+                  </div>
+
+                  <div className="border-l-4 border-orange-500 pl-4">
+                    <h4 className="font-bold text-orange-800">Wright Brothers (1903)</h4>
+                    <p className="text-gray-700">
+                      Achieved the first controlled, sustained, powered heavier-than-air flight on December 17, 1903 at Kitty Hawk.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded-lg p-6 mt-8">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Summary of Aviation History</h3>
+                <ul className="list-disc pl-6 space-y-2 text-gray-700">
+                  <li>The myth of Daedalus and Icarus represents humanity's ancient dream of flight</li>
+                  <li>Leonardo da Vinci's 15th century designs showed remarkable vision but were impractical</li>
+                  <li>The Montgolfier brothers achieved the first manned flight with hot-air balloons in 1783</li>
+                  <li>Sir George Cayley established the principles of modern aeronautics in 1799</li>
+                  <li>Otto Lilienthal's glider experiments in the 1890s paved the way for powered flight</li>
+                  <li>The Wright brothers achieved the first powered, controlled flight in 1903</li>
+                </ul>
+              </div>
+            </div>
+          )
+        };
+
+      case 'pdf-applications':
+        return {
+          title: '',
+          content: (
+            <div className="space-y-8">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-gray-800 mb-2">Basic Air Properties</h2>
+                <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium inline-block">
+                  MODULE 1 • TOPIC 2
+                </div>
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">What is Pressure?</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Pressure is kind of like force, but not quite. If you tried to hammer a bowling pin into the wall, nothing would probably happen except for people deciding to no longer lend you their bowling pins. However, if you hammer with the same force on a nail, the nail would be much more likely to penetrate the wall. This shows that sometimes just knowing the magnitude of the force isn't enough: you also have to know how that force is distributed on the surface of impact.
+                </p>
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Density</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Density is the mass of a unit volume of a material substance. The formula for density is <span className="font-mono">ρ = M/V</span>, where ρ is density, M is mass, and V is volume. Density is commonly expressed in units of grams per cubic centimeter or kilograms per cubic meter.
+                </p>
+                <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                  <h4 className="font-bold text-gray-700 mb-2">Examples:</h4>
+                  <ul className="list-disc pl-6 space-y-1 text-gray-700">
+                    <li>Water: 1 g/cm³</li>
+                    <li>Earth: 5.51 g/cm³</li>
+                    <li>Air: 1.2 kg/m³</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Temperature</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Temperature is a measure of hotness or coldness expressed in terms of any of several arbitrary scales and indicating the direction in which heat energy will spontaneously flow—from a hotter body (one at a higher temperature) to a colder body (one at a lower temperature).
+                </p>
+                <p className="text-gray-700 leading-relaxed mt-2">
+                  Temperature is not the equivalent of the energy of a thermodynamic system. For example, a burning match is at a much higher temperature than an iceberg, but the total heat energy contained in an iceberg is much greater than the energy contained in a match.
+                </p>
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Velocity</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Velocity is defined as a vector measurement of the rate and direction of motion. Put simply, velocity is the speed at which something moves in one direction. The scalar (absolute value) magnitude of the velocity vector is the speed of motion.
+                </p>
+                <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                  <h4 className="font-bold text-gray-700 mb-2">Velocity Formula:</h4>
+                  <p className="font-mono text-gray-800">v = d / t</p>
+                  <p className="text-gray-700 mt-2">Where:<br />
+                    v = velocity<br />
+                    d = displacement<br />
+                    t = time</p>
+                </div>
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Speed vs Velocity vs Acceleration</h3>
+                <div className="space-y-4">
+                  <div className="border-l-4 border-blue-500 pl-4">
+                    <h4 className="font-bold text-blue-800">Speed</h4>
+                    <p className="text-gray-700">Scalar quantity that indicates the rate of motion distance per time. Units are length and time.</p>
+                  </div>
+                  <div className="border-l-4 border-green-500 pl-4">
+                    <h4 className="font-bold text-green-800">Velocity</h4>
+                    <p className="text-gray-700">Vector quantity that indicates displacement, time, and direction.</p>
+                  </div>
+                  <div className="border-l-4 border-purple-500 pl-4">
+                    <h4 className="font-bold text-purple-800">Acceleration</h4>
+                    <p className="text-gray-700">Vector quantity that indicates the rate of change of velocity.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Summary of Basic Air Properties</h3>
+                <ol className="list-decimal pl-6 space-y-4 text-gray-700">
+                  <li>
+                    <span className="font-semibold">Pressure (P):</span> Force applied perpendicular to the surface per unit area. SI unit is pascal (Pa) = 1 N/m².
+                  </li>
+                  <li>
+                    <span className="font-semibold">Atmospheric Pressure:</span> Often measured in atm (1 atm = 101,325 Pa) or torr (1 torr = 1/760 atm).
+                  </li>
+                  <li>
+                    <span className="font-semibold">Density (ρ):</span> Mass per unit volume (ρ = m/V). Common units: kg/m³ or g/cm³.
+                  </li>
+                  <li>
+                    <span className="font-semibold">Temperature:</span> Measure of thermal energy. Common scales: Celsius (°C), Fahrenheit (°F), Kelvin (K).
+                  </li>
+                  <li>
+                    <span className="font-semibold">Thermometry:</span> Temperature is measured with thermometers calibrated to standard scales.
+                  </li>
+                  <li>
+                    <span className="font-semibold">Velocity:</span> Rate of change of position (vector quantity with magnitude and direction).
+                  </li>
+                  <li>
+                    <span className="font-semibold">Speed:</span> Scalar magnitude of velocity (m/s in SI units).
+                  </li>
+                </ol>
+              </div>
+            </div>
+          )
+        };
+
+
+      case 'pdf-theory':
+        return {
+          title: '',
+          content: (
+            <div className="space-y-8">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-gray-800 mb-2">Properties of Air</h2>
+                <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium inline-block">
+                  MODULE 3
+                </div>
+              </div>
+
+              {/* Pressure Section */}
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Pressure</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Pressure (P) is the force applied perpendicular to the surface of an object per unit area over which that force is distributed. Various units are used to express pressure:
+                </p>
+                <ul className="list-disc pl-6 mt-2 space-y-1 text-gray-700">
+                  <li>SI unit: pascal (Pa) = 1 N/m²</li>
+                  <li>Imperial unit: pound-force per square inch (psi)</li>
+                  <li>Standard atmospheric pressure (atm) = 101,325 Pa</li>
+                  <li>Torr = 1/760 atm</li>
+                </ul>
+                <p className="text-gray-700 leading-relaxed mt-4">
+                  Manometric units like cmH₂O, mmHg, and inHg express pressure in terms of fluid column height.
+                </p>
+              </div>
+
+              {/* Density Section */}
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Density</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Density (ρ) is mass per unit volume:
+                </p>
+                <div className="my-4 p-4 bg-gray-50 rounded-lg text-center">
+                  <p className="font-mono text-lg">ρ = m/V</p>
+                  <p className="text-gray-700 mt-2">
+                    where ρ = density, m = mass, V = volume
+                  </p>
+                </div>
+              </div>
+
+              {/* Temperature Section */}
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Temperature</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Temperature measures hotness/coldness and indicates heat flow direction. Common scales:
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                  <div className="border-l-4 border-red-500 pl-4">
+                    <h4 className="font-bold text-red-800">Celsius (°C)</h4>
+                    <p className="text-gray-700">Water freezes at 0°C, boils at 100°C</p>
+                  </div>
+                  <div className="border-l-4 border-blue-500 pl-4">
+                    <h4 className="font-bold text-blue-800">Fahrenheit (°F)</h4>
+                    <p className="text-gray-700">Water freezes at 32°F, boils at 212°F</p>
+                  </div>
+                  <div className="border-l-4 border-purple-500 pl-4">
+                    <h4 className="font-bold text-purple-800">Kelvin (K)</h4>
+                    <p className="text-gray-700">SI base unit, absolute scale</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Altitude Effects Section */}
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Air Pressure Changes with Altitude</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Gravity pulls air down creating air pressure. Our bodies equalize this pressure so we don't feel it. Air density and pressure decrease with altitude.
+                </p>
+                <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                  <h4 className="font-bold text-blue-800 mb-2">International Standard Atmosphere (ISA)</h4>
+                  <p className="text-gray-700">
+                    The ICAO Standard Atmosphere provides reference values at mean sea level:
+                  </p>
+                  <ul className="list-disc pl-6 mt-2 space-y-1 text-gray-700">
+                    <li>Pressure: 1013.2 mb (decreases ~1 mb/30 ft up to 5,000 ft)</li>
+                    <li>Temperature: +15°C (decreases 2°C/1,000 ft to tropopause at 36,000 ft)</li>
+                    <li>Density: 1.225 kg/m³</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Lapse Rate Section */}
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Lapse Rate</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  The rate at which temperature decreases with altitude in the troposphere.
+                </p>
+                <div className="mt-4 p-4 bg-green-50 rounded-lg">
+                  <h4 className="font-bold text-green-800 mb-2">Example Calculation</h4>
+                  <p className="text-gray-700 font-mono text-sm">
+                    Calculate pressure and density at 15,000 m:<br />
+                    Given: T = 216.5 K (constant)<br /><br />
+                    Pressure:<br />
+                    P = P₁₁ e<sup>(-g/RT)(h-11000)</sup><br />
+                    P = 22502.7116 Pa e<sup>(-9.8/(287×216.5)(15000-11000)</sup><br />
+                    P = 11974.22627 Pa<br /><br />
+                    Density:<br />
+                    ρ = ρ₁₁ e<sup>(-g/RT)(h-11000)</sup><br />
+                    ρ = 0.3622 kg/m³ e<sup>(-9.8/(287×216.5)(15000-11000)</sup><br />
+                    ρ = 0.192735206 kg/m³
+                  </p>
+                </div>
+              </div>
+
+              {/* Key Points Summary */}
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Key Properties of Air</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="border-l-4 border-yellow-500 pl-4">
+                    <h4 className="font-bold text-yellow-800">Pressure</h4>
+                    <ul className="list-disc pl-6 mt-2 space-y-1 text-gray-700">
+                      <li>Force per unit area</li>
+                      <li>Decreases with altitude</li>
+                      <li>Measured in Pa, psi, atm, etc.</li>
+                    </ul>
+                  </div>
+                  <div className="border-l-4 border-teal-500 pl-4">
+                    <h4 className="font-bold text-teal-800">Density</h4>
+                    <ul className="list-disc pl-6 mt-2 space-y-1 text-gray-700">
+                      <li>Mass per unit volume (ρ = m/V)</li>
+                      <li>Affected by temperature and pressure</li>
+                      <li>Decreases with altitude</li>
+                    </ul>
+                  </div>
+                  <div className="border-l-4 border-purple-500 pl-4">
+                    <h4 className="font-bold text-purple-800">Temperature</h4>
+                    <ul className="list-disc pl-6 mt-2 space-y-1 text-gray-700">
+                      <li>Measure of thermal energy</li>
+                      <li>Decreases with altitude (lapse rate)</li>
+                      <li>Measured in °C, °F, or K</li>
+                    </ul>
+                  </div>
+                  <div className="border-l-4 border-blue-500 pl-4">
+                    <h4 className="font-bold text-blue-800">ISA Standards</h4>
+                    <ul className="list-disc pl-6 mt-2 space-y-1 text-gray-700">
+                      <li>1013.2 mb at sea level</li>
+                      <li>15°C at sea level</li>
+                      <li>1.225 kg/m³ density</li>
                     </ul>
                   </div>
                 </div>
@@ -348,9 +671,11 @@ const PDFContent = ({ currentView }) => {
           )
         };
 
+
+
       default:
         return {
-          title: 'Learning Content',
+          title: '',
           content: (
             <div className="text-center py-16">
               <BookOpen size={64} className="mx-auto text-gray-400 mb-4" />
@@ -392,6 +717,71 @@ const LearningHub = () => {
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   const closeSidebar = () => setSidebarOpen(false);
 
+  const topics = [
+    {
+      id: 'pdf-intro',
+      title: "Earth's Atmosphere: Composition, Climate & Weather",
+      module: "Module 1",
+      keywords: ["earth", "atmosphere", "climate", "weather", "composition"]
+    },
+    {
+      id: 'pdf-advanced',
+      title: "Equation of State & Aerodynamic Force",
+      module: "Module 1",
+      keywords: ["equation", "state", "aerodynamic", "force"]
+    },
+    {
+      id: 'pdf-fundamentals',
+      title: "The Myth of Daedalus and Icarus",
+      module: "Module 2",
+      keywords: ["myth", "daedalus", "icarus", "aviation"]
+    },
+    {
+      id: 'pdf-applications',
+      title: "Basic Air Properties",
+      module: "Module 2",
+      keywords: ["air", "properties", "pressure", "density", "temperature"]
+    },
+    {
+      id: 'pdf-theory',
+      title: "Properties of Air",
+      module: "Module 3",
+      keywords: ["air", "properties", "theory", "science"]
+    },
+    {
+      id: 'weight',
+      title: "Weight Converter",
+      module: "Tools",
+      keywords: ["weight", "converter", "kg", "pounds", "calculator"]
+    },
+    {
+      id: 'temperature',
+      title: "Temperature Converter",
+      module: "Tools",
+      keywords: ["temperature", "converter", "celsius", "fahrenheit"]
+    }
+  ];
+
+  // Filter topics based on search term
+  const filteredTopics = searchTerm
+    ? topics.filter(topic =>
+      topic.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      topic.keywords.some(keyword =>
+        keyword.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    )
+    : [];
+
+  const autoScroll = (scroll) => {
+    setCurrentView(scroll);
+    closeSidebar();
+    // Add scroll to top functionality
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Optional: adds smooth scrolling animation
+    });
+  };
+
   const toggleSubmenu = (menuId) => {
     setExpandedMenus(prev => ({
       ...prev,
@@ -402,6 +792,10 @@ const LearningHub = () => {
   const showView = (view) => {
     setCurrentView(view);
     closeSidebar();
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Optional: adds smooth scrolling animation
+    });
   };
 
   const convertWeight = () => {
@@ -474,30 +868,48 @@ const LearningHub = () => {
             </div>
           </div>
 
-          <div className="flex-1 max-w-md mx-10">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-              <input
-                type="text"
-                placeholder="Search modules and topics..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-              />
-            </div>
+          <div className="relative">
+            {/* Search Bar */}
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+            <input
+              type="text"
+              placeholder="Search modules and topics..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            {/* Search results dropdown */}
+            {searchTerm && filteredTopics.length > 0 && (
+              <div className="absolute z-10 mt-1 w-full bg-white rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                {filteredTopics.map(topic => (
+                  <div
+                    key={topic.id}
+                    className="p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-200"
+                    onClick={() => {
+                      showView(topic.id);
+                      setSearchTerm('');
+                    }}
+                  >
+                    <div className="font-medium text-gray-800">{topic.title}</div>
+                    <div className="text-xs text-gray-500">{topic.module}</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
+
           {/* <div className="flex items-center gap-2">
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400">
-              <Bell size={20} />
-            </button>
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400">
-              <Settings size={20} />
-            </button>
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400">
-              <User size={20} />
-            </button>
-          </div> */}
+                    <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400">
+                      <Bell size={20} />
+                    </button>
+                    <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400">
+                      <Settings size={20} />
+                    </button>
+                    <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400">
+                      <User size={20} />
+                    </button>
+                  </div> */}
         </div>
       </nav>
 
@@ -547,14 +959,15 @@ const LearningHub = () => {
                 <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
                   <Target size={16} className="text-gray-600" />
                 </div>
-                <span className="font-medium">Module 2 - Learning</span>
+                <span className="font-medium">Module 2</span>
               </div>
               <ChevronDown size={16} className={`transform transition-transform ${expandedMenus.module2 ? 'rotate-180' : ''}`} />
             </div>
             {expandedMenus.module2 && (
               <div className="ml-4 space-y-1">
-                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-fundamentals')}>Fundamentals</div>
-                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-applications')}>Applications</div>
+                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-fundamentals')}>The Myth of Daedalus and Icarus</div>
+                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-applications')}>Basic Air Properties
+                </div>
               </div>
             )}
           </div>
@@ -565,15 +978,15 @@ const LearningHub = () => {
                 <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
                   <Award size={16} className="text-gray-600" />
                 </div>
-                <span className="font-medium">Module 3 - Advanced</span>
+                <span className="font-medium">Module 3</span>
               </div>
               <ChevronDown size={16} className={`transform transition-transform ${expandedMenus.module3 ? 'rotate-180' : ''}`} />
             </div>
             {expandedMenus.module3 && (
               <div className="ml-4 space-y-1">
-                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-theory')}>Theory</div>
-                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-practice')}>Practice</div>
-                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-cases')}>Case Studies</div>
+                <div className="p-2 text-sm hover:bg-gray-50 rounded-lg cursor-pointer text-gray-600 hover:text-gray-800" onClick={() => showView('pdf-theory')}>Properties of Air
+                </div>
+
               </div>
             )}
           </div>

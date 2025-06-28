@@ -163,6 +163,7 @@ const LearningHub = () => {
   const closeSidebar = () => setSidebarOpen(false);
 
   const topics = [
+    // Module 1
     {
       id: 'pdf-intro',
       title: "Earth's Atmosphere: Composition, Climate & Weather",
@@ -175,6 +176,8 @@ const LearningHub = () => {
       module: "Module 1",
       keywords: ["equation", "state", "aerodynamic", "force"]
     },
+
+    // Module 2
     {
       id: 'pdf-fundamentals',
       title: "The Myth of Daedalus and Icarus",
@@ -187,12 +190,86 @@ const LearningHub = () => {
       module: "Module 2",
       keywords: ["air", "properties", "pressure", "density", "temperature"]
     },
+
+    // Module 3
     {
       id: 'pdf-theory',
       title: "Properties of Air",
       module: "Module 3",
       keywords: ["air", "properties", "theory", "science"]
     },
+
+    // Module 4
+    {
+      id: 'pdf-idk',
+      title: "Mass Conservation in Fluid Dynamics",
+      module: "Module 4",
+      keywords: ["mass", "conservation", "fluid", "dynamics", "continuity"]
+    },
+    {
+      id: 'pdf-midtermt2',
+      title: "Speed of Sound",
+      module: "Module 4",
+      keywords: ["speed", "sound", "acoustic", "velocity", "mach"]
+    },
+    {
+      id: 'pdf-midtermt3',
+      title: "The Ratio of Aircraft Speed to Sound Speed",
+      module: "Module 4",
+      keywords: ["aircraft", "speed", "sound", "ratio", "mach", "number"]
+    },
+    {
+      id: 'pdf-midtermt4',
+      title: "Bernoulli's Equation",
+      module: "Module 4",
+      keywords: ["bernoulli", "equation", "pressure", "velocity", "flow"]
+    },
+    {
+      id: 'pdf-midtermMt1',
+      title: "Wind Tunnel",
+      module: "Module 4",
+      keywords: ["wind", "tunnel", "testing", "aerodynamics", "experiment"]
+    },
+    {
+      id: 'pdf-midtermMt2',
+      title: "Static Pressure & Airspeed",
+      module: "Module 4",
+      keywords: ["static", "pressure", "airspeed", "dynamic", "measurement"]
+    },
+
+    // Module 5
+    {
+      id: 'pdf-final',
+      title: "Airfoils",
+      module: "Module 5",
+      keywords: ["airfoils", "wing", "aerodynamics", "lift", "shape"]
+    },
+    {
+      id: 'pdf-final2',
+      title: "Airfoil Nomenclature",
+      module: "Module 5",
+      keywords: ["airfoil", "nomenclature", "terminology", "geometry", "chord"]
+    },
+    {
+      id: 'pdf-final3',
+      title: "NACA Airfoil",
+      module: "Module 5",
+      keywords: ["naca", "airfoil", "design", "series", "profile"]
+    },
+    {
+      id: 'pdf-final4',
+      title: "Viscous Flow",
+      module: "Module 5",
+      keywords: ["viscous", "flow", "boundary", "layer", "friction"]
+    },
+    {
+      id: 'pdf-final5',
+      title: "Flow Types & Reynolds Number",
+      module: "Module 5",
+      keywords: ["flow", "types", "reynolds", "number", "laminar", "turbulent"]
+    },
+
+    // Tools
     {
       id: 'weight',
       title: "Weight Converter",

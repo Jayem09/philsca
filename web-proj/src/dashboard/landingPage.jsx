@@ -15,6 +15,7 @@ import Prelimt1 from '../modules/prelim/Prelimt1';
 import Prelimt2 from '../modules/prelim/Prelimt2';
 import Prelimt3 from '../modules/prelim/Prelimt3';
 import Prelimt4 from '../modules/prelim/Prelimt4';
+import Prelimt5 from '../modules/prelim/Prelimt5';
 
 const PDFContent = ({ currentView }) => {
   const getContent = () => {

@@ -275,6 +275,23 @@ const PDFContent = ({ currentView }) => {
                     </div>
                   </div>
 
+                  <figure className="mb-10">
+                    <img
+                      src="./public/assets/idkman.png"
+                      alt="Earth's atmosphere from space"
+                      className="rounded-lg shadow-md w-full max-w-3xl mx-auto"
+                    />
+                    <figcaption className="text-xs text-center text-gray-500 mt-2">
+                      Ideal Gas Law P = Pressure
+
+                      ρ (rho) = Density
+
+                      R = Specific gas constant
+
+                      T = Temperature (Kelvin or Rankine)
+                    </figcaption>
+                  </figure>
+
                   <div className="section">
                     <h2 className="text-2xl font-bold text-gray-800 mb-4">Summary</h2>
                     <div className="bg-green-50 border border-green-200 rounded-lg p-6">

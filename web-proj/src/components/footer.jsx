@@ -132,7 +132,7 @@ function Footer() {
                 {/* Bottom Section */}
                 <div className="border-t border-slate-700/50 pt-8 flex flex-col justify-center items-center text-center">
                     <div className="text-slate-400 text-sm">
-                        © 2025 Atmospheric Calculator. Built with passion for aviation science and atmospheric physics.
+                        © 2025 AerodynaMND - Your Aviation Simulator. Built with passion for aviation science and atmospheric physics.
                     </div>
                 </div>
 

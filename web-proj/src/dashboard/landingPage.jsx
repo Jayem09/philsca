@@ -60,7 +60,7 @@ const PDFContent = ({ currentView }) => {
       case 'pdf-theory':
         return {
           title: '',
-          content: <Prelimtt5 />
+          content: <Prelimt5 />
         };
 
       case 'pdf-midtermt3':
